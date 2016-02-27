@@ -22,6 +22,7 @@ private:
     Board m_board;
     std::list<Player> m_players;
     int m_nbPlayers;
+    int m_nbWallsAtStart;
 
     bool m_continue;
 };

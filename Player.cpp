@@ -3,12 +3,15 @@
 #include "Board.h"
 
 Player::Player() :
-    Player(0)
+    Player(0, 0)
 {
 }
 
-Player::Player(const int &numero) :
-    m_numero(numero)
+Player::Player(const int &numero, const int &nbWalls) :
+    m_iPos(-1),
+    m_jPos(-1),
+    m_numero(numero),
+    m_nbWalls(nbWalls)
 {
 }
 

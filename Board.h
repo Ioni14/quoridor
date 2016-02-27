@@ -7,6 +7,9 @@
 class Board
 {
 public:
+    enum WALL_ORIENTATION {VERTICAL, HORIZONTAL};
+
+public:
     Board(const int& size);
 
     void render();
@@ -15,6 +18,9 @@ public:
     const int& getSize() const {
         return m_size;
     }
+
+    void putWall(Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    bool canPutWall(const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation) const;
 
 private:
     void create();

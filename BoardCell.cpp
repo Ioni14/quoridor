@@ -1,10 +1,10 @@
 #include "BoardCell.h"
 
 BoardCell::BoardCell() :
-    m_wallNorth(false),
-    m_wallSouth(false),
-    m_wallEast(false),
-    m_wallWest(false),
+    m_wallNorth(WALL_POSITION::NONE),
+    m_wallSouth(WALL_POSITION::NONE),
+    m_wallEast(WALL_POSITION::NONE),
+    m_wallWest(WALL_POSITION::NONE),
     m_player(nullptr)
 {
 }
@@ -16,31 +16,43 @@ BoardCell::BoardCell(const int& i, const int& j) :
     m_jPos = j;
 }
 
-const bool& BoardCell::hasWallNorth() const {
+const BoardCell::WALL_POSITION& BoardCell::getWallNorth() const {
     return m_wallNorth;
 }
-void BoardCell::setWallNorth(const bool& val) {
+const bool& BoardCell::hasWallNorth() const {
+    return m_wallNorth != WALL_POSITION::NONE;
+}
+void BoardCell::setWallNorth(const BoardCell::WALL_POSITION& val) {
     m_wallNorth = val;
 }
 
-const bool& BoardCell::hasWallSouth() const {
+const BoardCell::WALL_POSITION& BoardCell::getWallSouth() const {
     return m_wallSouth;
 }
-void BoardCell::setWallSouth(const bool& val) {
+const bool& BoardCell::hasWallSouth() const {
+    return m_wallSouth != WALL_POSITION::NONE;
+}
+void BoardCell::setWallSouth(const BoardCell::WALL_POSITION& val) {
     m_wallSouth = val;
 }
 
-const bool& BoardCell::hasWallEast() const {
+const BoardCell::WALL_POSITION& BoardCell::getWallEast() const {
     return m_wallEast;
 }
-void BoardCell::setWallEast(const bool& val) {
+const bool& BoardCell::hasWallEast() const {
+    return m_wallEast != WALL_POSITION::NONE;
+}
+void BoardCell::setWallEast(const BoardCell::WALL_POSITION& val) {
     m_wallEast = val;
 }
 
-const bool& BoardCell::hasWallWest() const {
+const BoardCell::WALL_POSITION& BoardCell::getWallWest() const {
     return m_wallWest;
 }
-void BoardCell::setWallWest(const bool& val) {
+const bool& BoardCell::hasWallWest() const {
+    return m_wallWest != WALL_POSITION::NONE;
+}
+void BoardCell::setWallWest(const BoardCell::WALL_POSITION& val) {
     m_wallWest = val;
 }
 

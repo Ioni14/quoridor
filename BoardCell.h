@@ -6,20 +6,27 @@
 class BoardCell
 {
 public:
+    enum WALL_POSITION {NONE, UP_LEFT, DOWN_RIGHT};
+
+public:
     BoardCell();
     BoardCell(const int& i, const int& j);
 
+    const WALL_POSITION& getWallNorth() const;
     const bool& hasWallNorth() const;
-    void setWallNorth(const bool& val);
+    void setWallNorth(const WALL_POSITION& val);
 
+    const WALL_POSITION& getWallSouth() const;
     const bool& hasWallSouth() const;
-    void setWallSouth(const bool& val);
+    void setWallSouth(const WALL_POSITION& val);
 
+    const WALL_POSITION& getWallEast() const;
     const bool& hasWallEast() const;
-    void setWallEast(const bool& val);
+    void setWallEast(const WALL_POSITION& val);
 
+    const WALL_POSITION& getWallWest() const;
     const bool& hasWallWest() const;
-    void setWallWest(const bool& val);
+    void setWallWest(const WALL_POSITION& val);
 
     const Player* getPlayer() const;
     void setPlayer(const Player* player);
@@ -28,11 +35,12 @@ public:
     const int& getIPos() const;
     const int& getJPos() const;
 
+
 private:
-    bool m_wallNorth;
-    bool m_wallSouth;
-    bool m_wallEast;
-    bool m_wallWest;
+    WALL_POSITION m_wallNorth;
+    WALL_POSITION m_wallSouth;
+    WALL_POSITION m_wallEast;
+    WALL_POSITION m_wallWest;
 
     int m_iPos;
     int m_jPos;

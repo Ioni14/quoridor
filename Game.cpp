@@ -8,6 +8,7 @@ Game::Game(const int& boardSize, const int &nbPlayers) :
     m_board(boardSize),
     m_players(0),
     m_nbPlayers(nbPlayers),
+    m_nbWallsAtStart((boardSize + 1) / (nbPlayers / 2)),
     m_continue(true)
 {
     initPlayers();
@@ -18,7 +19,7 @@ void Game::initPlayers()
     auto size = m_board.getSize();
 
     for (int n = 0; n < m_nbPlayers; ++n) {
-        m_players.push_back(Player(n+1));
+        m_players.push_back(Player(n + 1, m_nbWallsAtStart));
 
         int i(0), j(0);
 
@@ -129,10 +130,8 @@ void Game::render()
 
 void Game::update()
 {
-
-    m_board.putWall(5, 6, Board::WALL_ORIENTATION::VERTICAL);
-
-
+    m_board.putWall(*(m_players.begin()), 5, 4, Board::WALL_ORIENTATION::VERTICAL);
+    m_board.putWall(*(m_players.begin()), 5, 6, Board::WALL_ORIENTATION::HORIZONTAL);
 
     for (auto it = m_players.begin(); it != m_players.end(); ++it) {
         it->move(m_board, 1, 0);
