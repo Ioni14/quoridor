@@ -4,7 +4,13 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    Game.cpp
+    Game.cpp \
+    Board.cpp \
+    Player.cpp \
+    BoardCell.cpp
 
 HEADERS += \
-    Game.hpp
+    Game.h \
+    Board.h \
+    Player.h \
+    BoardCell.h

@@ -1,7 +1,10 @@
 #include <iostream>
 
-int main(int argc, char* argv[])
+#include "Game.h"
+
+int main()
 {
-    std::cout << "Hello World!" << std::endl;
+    Game(9, 4).run();
+
     return EXIT_SUCCESS;
 }
