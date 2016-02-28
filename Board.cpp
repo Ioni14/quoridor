@@ -61,7 +61,7 @@ void Board::putBorderWalls(const int& i, const int& j)
     }
 }
 
-void Board::putWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+void Board::putWall(const std::list<Player>& players, Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
     if (!canPutWall(player, i, j, orientation)) {
         return;
@@ -77,6 +77,22 @@ void Board::putWall(Player& player, const int& i, const int& j, const Board::WAL
         m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
         m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::UP_LEFT);
         m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
+    }
+
+    if (!havePaths(players)) {
+        // Pas de chemin pour les joueurs : on enlève les murs
+        if (orientation == WALL_ORIENTATION::VERTICAL) {
+            m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::NONE);
+            m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::NONE);
+            m_cells[i + 1][j].setWallWest(BoardCell::WALL_POSITION::NONE);
+            m_cells[i + 1][j + 1].setWallWest(BoardCell::WALL_POSITION::NONE);
+        } else {
+            m_cells[i][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+            m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+            m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+            m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+        }
+        return;
     }
 
     player.decrementWalls();
@@ -111,6 +127,52 @@ bool Board::canPutWall(const Player& player, const int& i, const int& j, const B
         }
     }
 
+    return true;
+}
+
+bool Board::havePaths(const std::list<Player>& players) const
+{
     // Test pathfinding
-    return m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 4, 4);
+    bool havePaths = true;
+    for (auto& player : players) {
+        bool hasPath = false;
+        switch (player.getNumero()) {
+            case 1:
+            default:
+                for (int i = 0; i < m_size; ++i) {
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, 0);
+                    if (hasPath) {
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < m_size; ++i) {
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, m_size - 1);
+                    if (hasPath) {
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                for (int j = 0; j < m_size; ++j) {
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 0, j);
+                    if (hasPath) {
+                        break;
+                    }
+                }
+                break;
+            case 4:
+                for (int j = 0; j < m_size; ++j) {
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), m_size - 1, j);
+                    if (hasPath) {
+                        break;
+                    }
+                }
+                break;
+        }
+        havePaths &= hasPath;
+    }
+
+    return havePaths;
 }

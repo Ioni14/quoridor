@@ -1,10 +1,9 @@
-#include <iostream>
-
-#include "Game.h"
+#include "Quoridor.h"
 
 int main()
 {
-    Game(9, 4).run();
+    Quoridor().run();
+    //Game(9, 4).run();
 
     return EXIT_SUCCESS;
 }

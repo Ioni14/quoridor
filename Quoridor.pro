@@ -10,7 +10,11 @@ SOURCES += main.cpp \
     BoardCell.cpp \
     AbstractPathfinding.cpp \
     PathfindingAStar.cpp \
-    PathfindingAStarCell.cpp
+    PathfindingAStarCell.cpp \
+    Quoridor.cpp \
+    State.cpp \
+    MainMenuState.cpp \
+    QuitState.cpp
 
 HEADERS += \
     Game.h \
@@ -19,4 +23,8 @@ HEADERS += \
     BoardCell.h \
     AbstractPathfinding.h \
     PathfindingAStar.h \
-    PathfindingAStarCell.h
+    PathfindingAStarCell.h \
+    Quoridor.h \
+    State.h \
+    MainMenuState.h \
+    QuitState.h

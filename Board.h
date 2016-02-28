@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <list>
 #include "AbstractPathfinding.h"
 #include "BoardCell.h"
 
@@ -19,8 +20,9 @@ public:
     void render();
     std::vector<std::vector<BoardCell>>& getCells();
     const std::vector<std::vector<BoardCell>>& getCells() const;
-    void putWall(Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    void putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
     bool canPutWall(const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation) const;
+    bool havePaths(const std::list<Player> &players) const;
 
     const int& getSize() const {
         return m_size;

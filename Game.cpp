@@ -130,8 +130,8 @@ void Game::render()
 
 void Game::update()
 {
-    m_board.putWall(*(m_players.begin()), 5, 4, Board::WALL_ORIENTATION::VERTICAL);
-    m_board.putWall(*(m_players.begin()), 5, 6, Board::WALL_ORIENTATION::HORIZONTAL);
+    m_board.putWall(m_players, *(m_players.begin()), 5, 4, Board::WALL_ORIENTATION::VERTICAL);
+    m_board.putWall(m_players, *(m_players.begin()), 5, 6, Board::WALL_ORIENTATION::HORIZONTAL);
 
     for (auto it = m_players.begin(); it != m_players.end(); ++it) {
         it->move(m_board, 1, 0);

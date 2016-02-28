@@ -130,7 +130,6 @@ bool PathfindingAStar::hasPath( const int& iSource,
                 m_openList.push_back(std::move(aStarCell));
             } else {
                 // Déjà dans la openList
-
                 if (costMovementActual + heuristicActual < minCell->calcScore()) {
                     // On a trouvé un meilleur chemin qui passe par cette cellule
                     (*itOpenList)->setCostMovement(costMovementActual);
