@@ -7,10 +7,16 @@ SOURCES += main.cpp \
     Game.cpp \
     Board.cpp \
     Player.cpp \
-    BoardCell.cpp
+    BoardCell.cpp \
+    AbstractPathfinding.cpp \
+    PathfindingAStar.cpp \
+    PathfindingAStarCell.cpp
 
 HEADERS += \
     Game.h \
     Board.h \
     Player.h \
-    BoardCell.h
+    BoardCell.h \
+    AbstractPathfinding.h \
+    PathfindingAStar.h \
+    PathfindingAStarCell.h

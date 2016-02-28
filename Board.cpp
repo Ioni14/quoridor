@@ -1,8 +1,11 @@
 #include "Board.h"
 
+#include "PathfindingAStar.h"
+
 Board::Board(const int& size):
     m_cells(0),
-    m_size(size)
+    m_size(size),
+    m_pathfindingStrategy(std::make_unique<PathfindingAStar>(*this))
 {
     create();
 }
@@ -29,19 +32,19 @@ void Board::create()
         }
     }
 
-    for (int i = 0; i <= m_size - 2; i+=2) {
-        m_cells[i][3].setWallSouth(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[i][4].setWallNorth(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[i+1][3].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
-        m_cells[i+1][4].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
-    }
-    for (int j = 1; j <= m_size - 1; j+=2) {
-        m_cells[3][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[4][j].setWallWest(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[3][j+1].setWallEast(BoardCell::WALL_POSITION::DOWN_RIGHT);
-        m_cells[4][j+1].setWallWest(BoardCell::WALL_POSITION::DOWN_RIGHT);
+    for (int j = m_size - 1; j >= 0; j-=2) {
+        m_cells[7][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[8][j].setWallWest(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[7][j+1].setWallEast(BoardCell::WALL_POSITION::DOWN_RIGHT);
+        m_cells[8][j+1].setWallWest(BoardCell::WALL_POSITION::DOWN_RIGHT);
     }
 
+    for (int i = 0; i <= m_size - 2; i+=2) {
+        m_cells[i][6].setWallSouth(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i][7].setWallNorth(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i+1][6].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
+        m_cells[i+1][7].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
+    }
 }
 
 void Board::putBorderWalls(const int& i, const int& j)
@@ -109,6 +112,5 @@ bool Board::canPutWall(const Player& player, const int& i, const int& j, const B
     }
 
     // Test pathfinding
-
-    return true;
+    return m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 4, 4);
 }

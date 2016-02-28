@@ -19,7 +19,7 @@ BoardCell::BoardCell(const int& i, const int& j) :
 const BoardCell::WALL_POSITION& BoardCell::getWallNorth() const {
     return m_wallNorth;
 }
-const bool& BoardCell::hasWallNorth() const {
+bool BoardCell::hasWallNorth() const {
     return m_wallNorth != WALL_POSITION::NONE;
 }
 void BoardCell::setWallNorth(const BoardCell::WALL_POSITION& val) {
@@ -29,7 +29,7 @@ void BoardCell::setWallNorth(const BoardCell::WALL_POSITION& val) {
 const BoardCell::WALL_POSITION& BoardCell::getWallSouth() const {
     return m_wallSouth;
 }
-const bool& BoardCell::hasWallSouth() const {
+bool BoardCell::hasWallSouth() const {
     return m_wallSouth != WALL_POSITION::NONE;
 }
 void BoardCell::setWallSouth(const BoardCell::WALL_POSITION& val) {
@@ -39,7 +39,7 @@ void BoardCell::setWallSouth(const BoardCell::WALL_POSITION& val) {
 const BoardCell::WALL_POSITION& BoardCell::getWallEast() const {
     return m_wallEast;
 }
-const bool& BoardCell::hasWallEast() const {
+bool BoardCell::hasWallEast() const {
     return m_wallEast != WALL_POSITION::NONE;
 }
 void BoardCell::setWallEast(const BoardCell::WALL_POSITION& val) {
@@ -49,7 +49,7 @@ void BoardCell::setWallEast(const BoardCell::WALL_POSITION& val) {
 const BoardCell::WALL_POSITION& BoardCell::getWallWest() const {
     return m_wallWest;
 }
-const bool& BoardCell::hasWallWest() const {
+bool BoardCell::hasWallWest() const {
     return m_wallWest != WALL_POSITION::NONE;
 }
 void BoardCell::setWallWest(const BoardCell::WALL_POSITION& val) {

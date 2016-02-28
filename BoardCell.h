@@ -13,19 +13,19 @@ public:
     BoardCell(const int& i, const int& j);
 
     const WALL_POSITION& getWallNorth() const;
-    const bool& hasWallNorth() const;
+    bool hasWallNorth() const;
     void setWallNorth(const WALL_POSITION& val);
 
     const WALL_POSITION& getWallSouth() const;
-    const bool& hasWallSouth() const;
+    bool hasWallSouth() const;
     void setWallSouth(const WALL_POSITION& val);
 
     const WALL_POSITION& getWallEast() const;
-    const bool& hasWallEast() const;
+    bool hasWallEast() const;
     void setWallEast(const WALL_POSITION& val);
 
     const WALL_POSITION& getWallWest() const;
-    const bool& hasWallWest() const;
+    bool hasWallWest() const;
     void setWallWest(const WALL_POSITION& val);
 
     const Player* getPlayer() const;
@@ -34,7 +34,6 @@ public:
 
     const int& getIPos() const;
     const int& getJPos() const;
-
 
 private:
     WALL_POSITION m_wallNorth;
