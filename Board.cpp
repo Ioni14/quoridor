@@ -32,6 +32,7 @@ void Board::create()
         }
     }
 
+    /*
     for (int j = m_size - 1; j >= 0; j-=2) {
         m_cells[7][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
         m_cells[8][j].setWallWest(BoardCell::WALL_POSITION::UP_LEFT);
@@ -45,6 +46,7 @@ void Board::create()
         m_cells[i+1][6].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
         m_cells[i+1][7].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
     }
+    */
 }
 
 void Board::putBorderWalls(const int& i, const int& j)

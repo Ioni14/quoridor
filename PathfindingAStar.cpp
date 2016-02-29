@@ -12,6 +12,11 @@ PathfindingAStar::PathfindingAStar(const Board& board) :
 {
 }
 
+/*
+ * Nous aurions pu utiliser des std::weak_ptr et std::shared_ptr au lieu de std::unique_ptr
+ * Pour éviter d'avoir des pointeurs de std::unique_ptr
+ * Mais nous avons privilégié les performances
+ */
 bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest)
 {
     auto& cells = m_board.getCells();
@@ -50,13 +55,7 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
 
         {
             // On vérifie si la destination se trouve dans la closeList
-            auto itCloseListDest = std::find_if(m_closeList.rbegin(), m_closeList.rend(),
-                // Lambda fonction pour trouver si la cellule est dans la openList
-                [iDest, jDest](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
-                    return iDest == cell->getBoardCell().getIPos() &&
-                           jDest == cell->getBoardCell().getJPos();
-                }
-            );
+            auto itCloseListDest = findCellInCloseList(iDest, jDest);
             // A-t-on trouvé un chemin ?
             if (itCloseListDest != m_closeList.rend()) {
                 return true;
@@ -67,40 +66,19 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
         auto& minCell = m_closeList.back();
         auto& cellActual = minCell->getBoardCell();
 
-        // On groupe les cellules atteignables
-        std::vector<const BoardCell*> walkableCells(0);
-        if (cellActual.getIPos() + 1 < m_board.getSize() && !cellActual.hasWallEast()) {
-            // On peut aller à droite
-            walkableCells.push_back(&(cells[cellActual.getIPos() + 1][cellActual.getJPos()]));
-        }
-        if (cellActual.getJPos() + 1 < m_board.getSize() && !cellActual.hasWallSouth()) {
-            // On peut aller en bas
-            walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() + 1]));
-        }
-        if (cellActual.getIPos() - 1 >= 0 && !cellActual.hasWallWest()) {
-            // On peut aller à gauche
-            walkableCells.push_back(&(cells[cellActual.getIPos() - 1][cellActual.getJPos()]));
-        }
-        if (cellActual.getJPos() - 1 >= 0 && !cellActual.hasWallNorth()) {
-            // On peut aller en haut
-            walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() - 1]));
-        }
-
         // Pour chaque cellules qu'on peut atteindre
+        auto walkableCells = findWalkableCells(cellActual);
+
         // => On calcule son score et on l'ajoute dans la openList si pas déjà fait
         for (auto itBoardCell = walkableCells.begin(); itBoardCell != walkableCells.end(); ++itBoardCell) {
 
             // Dans closeList ?
-            auto itCloseList = std::find_if(m_closeList.rbegin(), m_closeList.rend(),
-                // Lambda fonction pour trouver si la cellule est dans la openList
-                [itBoardCell](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
-                    return (*itBoardCell)->getIPos() == cell->getBoardCell().getIPos() &&
-                           (*itBoardCell)->getJPos() == cell->getBoardCell().getJPos();
+            {
+                auto itCloseList = findCellInCloseList((*itBoardCell)->getIPos(), (*itBoardCell)->getJPos());
+                // On l'ignore si elle est dans la closeList
+                if (itCloseList != m_closeList.rend()) {
+                    continue;
                 }
-            );
-            // On l'ignore si elle est dans la closeList
-            if (itCloseList != m_closeList.rend()) {
-                continue;
             }
 
             // Dans openList ?
@@ -138,4 +116,42 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
     } // fin while
 
     return false;
+}
+
+std::vector<const BoardCell*> PathfindingAStar::findWalkableCells(const BoardCell& cellActual)
+{
+    auto& cells = m_board.getCells();
+
+    // On groupe les cellules atteignables
+    std::vector<const BoardCell*> walkableCells(0);
+    if (cellActual.getIPos() + 1 < m_board.getSize() && !cellActual.hasWallEast()) {
+        // On peut aller à droite
+        walkableCells.push_back(&(cells[cellActual.getIPos() + 1][cellActual.getJPos()]));
+    }
+    if (cellActual.getJPos() + 1 < m_board.getSize() && !cellActual.hasWallSouth()) {
+        // On peut aller en bas
+        walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() + 1]));
+    }
+    if (cellActual.getIPos() - 1 >= 0 && !cellActual.hasWallWest()) {
+        // On peut aller à gauche
+        walkableCells.push_back(&(cells[cellActual.getIPos() - 1][cellActual.getJPos()]));
+    }
+    if (cellActual.getJPos() - 1 >= 0 && !cellActual.hasWallNorth()) {
+        // On peut aller en haut
+        walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() - 1]));
+    }
+
+    return walkableCells;
+}
+
+std::list<PathfindingAStarCell::PathfindingAStarCellPtr>::reverse_iterator
+PathfindingAStar::findCellInCloseList(const int& i, const int& j)
+{
+    return std::find_if(m_closeList.rbegin(), m_closeList.rend(),
+        // Lambda fonction pour trouver si la cellule est dans la openList
+        [i, j](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
+            return i == cell->getBoardCell().getIPos() &&
+                   j == cell->getBoardCell().getJPos();
+        }
+    );
 }

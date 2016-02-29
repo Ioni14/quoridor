@@ -1,33 +1,31 @@
-#include "Game.h"
+#include "GameState.h"
 
 #include <iostream>
 #include <sstream>
 #include <string>
 
-Game::Game(const int& boardSize, const int &nbPlayers) :
+GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardSize) :
+    State(app),
     m_board(boardSize),
-    m_players(0),
-    m_nbPlayers(nbPlayers),
-    m_nbWallsAtStart((boardSize + 1) / (nbPlayers / 2)),
-    m_continue(true)
+    m_players(std::move(players)),
+    m_nbPlayers(m_players.size()),
+    m_nbWallsAtStart((boardSize + 1) / (m_nbPlayers / 2)),
+    m_loadingRendered(false)
 {
     initPlayers();
 }
 
-void Game::initPlayers()
+void GameState::initPlayers()
 {
     auto size = m_board.getSize();
 
-    for (int n = 0; n < m_nbPlayers; ++n) {
-        m_players.push_back(Player(n + 1, m_nbWallsAtStart));
+    for (auto& player : m_players) {
+        // On lui donne ses murs
+        player.setWalls(m_nbWallsAtStart);
 
+        // On positionne le joueur selon son numéro
         int i(0), j(0);
-
-        // On récupère le n-ième Player de la liste
-        auto it = m_players.begin();
-        std::advance(it, n);
-
-        switch (it->getNumero()) {
+        switch (player.getNumero()) {
             case 1:
             default:
                 i = size / 2;
@@ -46,29 +44,20 @@ void Game::initPlayers()
                 j = size / 2;
                 break;
         }
-        it->setIPos(i);
-        it->setJPos(j);
-        m_board.getCells()[i][j].setPlayer(&(*it));
+        player.setIPos(i);
+        player.setJPos(j);
+        m_board.getCells()[i][j].setPlayer(&player);
     }
 }
 
-void Game::run()
+void GameState::render()
 {
-    int iterations = 0;
-    while (m_continue) {
-        handleEvents();
-        update();
-        render();
-        iterations++;
-        if (iterations == 2) {
-            m_continue = false;
-        }
+    if (!m_loadingRendered) {
+        m_loadingRendered = true;
+        std::cout << "Lancement de la partie..." << std::endl;
+        return;
     }
-}
 
-void Game::render()
-{
-    //m_board.render();
     std::ostringstream oss;
 
     auto size = m_board.getSize();
@@ -100,7 +89,7 @@ void Game::render()
 
             // Contenu de la cellule
             if (cell.getPlayer() == nullptr) {
-                ossLine << " ";
+                ossLine << ' ';
             } else {
                 ossLine << cell.getPlayer()->getNumero();
             }
@@ -128,17 +117,20 @@ void Game::render()
     std::cout << oss.str() << std::endl;
 }
 
-void Game::update()
+void GameState::update()
 {
+    /*
     m_board.putWall(m_players, *(m_players.begin()), 5, 4, Board::WALL_ORIENTATION::VERTICAL);
     m_board.putWall(m_players, *(m_players.begin()), 5, 6, Board::WALL_ORIENTATION::HORIZONTAL);
 
     for (auto it = m_players.begin(); it != m_players.end(); ++it) {
         it->move(m_board, 1, 0);
     }
+    */
 }
 
-void Game::handleEvents()
+void GameState::handleEvents()
 {
-
+    int choice(0);
+    std::cin >> choice;
 }

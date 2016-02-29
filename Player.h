@@ -7,7 +7,7 @@ class Player
 {
 public:
     Player();
-    Player(const int& numero, const int& nbWalls);
+    Player(const int& numero, const bool &ia = false);
 
     void move(Board& board, const int &di, const int &dj);
     bool canMove(const Board& board, const int& di, const int& dj) const;
@@ -30,10 +30,16 @@ public:
         m_jPos = j;
     }
 
+    const bool& isIA() const {
+        return m_IA;
+    }
+
     bool hasWalls() const {
         return m_nbWalls > 0;
     }
-
+    void setWalls(const int& walls) {
+        m_nbWalls = walls;
+    }
     void decrementWalls() {
         m_nbWalls--;
     }
@@ -44,6 +50,8 @@ private:
 
     int m_numero;
     int m_nbWalls;
+
+    bool m_IA;
 };
 
 #endif // PLAYER_H

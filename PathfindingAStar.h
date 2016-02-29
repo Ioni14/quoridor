@@ -3,6 +3,7 @@
 
 #include <list>
 #include <memory>
+#include <vector>
 #include "AbstractPathfinding.h"
 #include "PathfindingAStarCell.h"
 
@@ -12,6 +13,12 @@ public:
     PathfindingAStar(const Board& board);
 
     bool hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest);
+
+private:
+    std::vector<const BoardCell*> findWalkableCells(const BoardCell& cellActual);
+
+    std::list<PathfindingAStarCell::PathfindingAStarCellPtr>::reverse_iterator
+    findCellInCloseList(const int& i, const int& j);
 
 private:
     std::list<PathfindingAStarCell::PathfindingAStarCellPtr> m_openList;

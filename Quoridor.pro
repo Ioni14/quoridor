@@ -4,7 +4,6 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    Game.cpp \
     Board.cpp \
     Player.cpp \
     BoardCell.cpp \
@@ -14,10 +13,10 @@ SOURCES += main.cpp \
     Quoridor.cpp \
     State.cpp \
     MainMenuState.cpp \
-    QuitState.cpp
+    QuitState.cpp \
+    GameState.cpp
 
 HEADERS += \
-    Game.h \
     Board.h \
     Player.h \
     BoardCell.h \
@@ -27,4 +26,5 @@ HEADERS += \
     Quoridor.h \
     State.h \
     MainMenuState.h \
-    QuitState.h
+    QuitState.h \
+    GameState.h

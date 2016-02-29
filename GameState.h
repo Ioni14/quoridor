@@ -2,14 +2,13 @@
 #define GAME_HPP
 
 #include <list>
+#include "State.h"
 #include "Board.h"
 
-class Game
+class GameState : public State
 {
 public:
-    Game(const int &boardSize, const int& nbPlayers);
-
-    void run();
+    GameState(Quoridor& app, std::list<Player> players, const int &boardSize);
 
 private:
     void render();
@@ -24,7 +23,7 @@ private:
     int m_nbPlayers;
     int m_nbWallsAtStart;
 
-    bool m_continue;
+    bool m_loadingRendered;
 };
 
 #endif // GAME_HPP
