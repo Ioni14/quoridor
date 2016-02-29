@@ -12,16 +12,13 @@ PathfindingAStar::PathfindingAStar(const Board& board) :
 {
 }
 
-bool PathfindingAStar::hasPath( const int& iSource,
-                                const int& jSource,
-                                const int& iDest,
-                                const int& jDest)
+bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest)
 {
     auto& cells = m_board.getCells();
 
     {
         int heuristic = static_cast<int>(std::abs(iDest - iSource) + std::abs(jDest - jSource));
-        PathfindingAStarCellPtr aStarCell = std::make_unique<PathfindingAStarCell>(
+        PathfindingAStarCell::PathfindingAStarCellPtr aStarCell = std::make_unique<PathfindingAStarCell>(
             heuristic,
             cells[iSource][jSource]
         );
@@ -55,7 +52,7 @@ bool PathfindingAStar::hasPath( const int& iSource,
             // On vérifie si la destination se trouve dans la closeList
             auto itCloseListDest = std::find_if(m_closeList.rbegin(), m_closeList.rend(),
                 // Lambda fonction pour trouver si la cellule est dans la openList
-                [iDest, jDest](const PathfindingAStarCellPtr& cell) -> bool {
+                [iDest, jDest](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
                     return iDest == cell->getBoardCell().getIPos() &&
                            jDest == cell->getBoardCell().getJPos();
                 }
@@ -96,7 +93,7 @@ bool PathfindingAStar::hasPath( const int& iSource,
             // Dans closeList ?
             auto itCloseList = std::find_if(m_closeList.rbegin(), m_closeList.rend(),
                 // Lambda fonction pour trouver si la cellule est dans la openList
-                [itBoardCell](const PathfindingAStarCellPtr& cell) -> bool {
+                [itBoardCell](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
                     return (*itBoardCell)->getIPos() == cell->getBoardCell().getIPos() &&
                            (*itBoardCell)->getJPos() == cell->getBoardCell().getJPos();
                 }
@@ -109,7 +106,7 @@ bool PathfindingAStar::hasPath( const int& iSource,
             // Dans openList ?
             auto itOpenList = std::find_if(m_openList.begin(), m_openList.end(),
                 // Lambda fonction pour trouver si la cellule est dans la openList
-                [itBoardCell](const PathfindingAStarCellPtr& cell) -> bool {
+                [itBoardCell](const PathfindingAStarCell::PathfindingAStarCellPtr& cell) -> bool {
                     return (*itBoardCell)->getIPos() == cell->getBoardCell().getIPos() &&
                            (*itBoardCell)->getJPos() == cell->getBoardCell().getJPos();
                 }
@@ -121,7 +118,7 @@ bool PathfindingAStar::hasPath( const int& iSource,
 
             if (itOpenList == m_openList.end()) {
                 // Pas dans la openList
-                PathfindingAStarCellPtr aStarCell = std::make_unique<PathfindingAStarCell>(
+                PathfindingAStarCell::PathfindingAStarCellPtr aStarCell = std::make_unique<PathfindingAStarCell>(
                     costMovementActual,
                     heuristicActual,
                     &minCell,

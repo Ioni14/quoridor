@@ -9,19 +9,13 @@
 class PathfindingAStar : public AbstractPathfinding
 {
 public:
-    typedef std::unique_ptr<PathfindingAStarCell> PathfindingAStarCellPtr;
-
-public:
     PathfindingAStar(const Board& board);
 
-    bool hasPath(const int& iSource,
-                 const int& jSource,
-                 const int& iDest,
-                 const int& jDest);
+    bool hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest);
 
 private:
-    std::list<PathfindingAStarCellPtr> m_openList;
-    std::list<PathfindingAStarCellPtr> m_closeList;
+    std::list<PathfindingAStarCell::PathfindingAStarCellPtr> m_openList;
+    std::list<PathfindingAStarCell::PathfindingAStarCellPtr> m_closeList;
 
     static const int COST_MOVEMENT;
 };

@@ -7,10 +7,9 @@ PathfindingAStarCell::PathfindingAStarCell(
 {
 }
 
-PathfindingAStarCell::PathfindingAStarCell(
-        const int &costMovement,
+PathfindingAStarCell::PathfindingAStarCell(const int &costMovement,
         const int &heuristic,
-        const std::unique_ptr<PathfindingAStarCell>* parent,
+        const PathfindingAStarCellPtr *parent,
         const BoardCell& boardCell) :
     m_costMovement(costMovement),
     m_heuristic(heuristic),

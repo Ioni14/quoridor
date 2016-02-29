@@ -7,8 +7,11 @@
 class PathfindingAStarCell
 {
 public:
+    typedef std::unique_ptr<PathfindingAStarCell> PathfindingAStarCellPtr;
+
+public:
     PathfindingAStarCell(const int &heuristic, const BoardCell& boardCell);
-    PathfindingAStarCell(const int& costMovement, const int& heuristic, const std::unique_ptr<PathfindingAStarCell>* parent, const BoardCell& boardCell);
+    PathfindingAStarCell(const int& costMovement, const int& heuristic, const PathfindingAStarCellPtr* parent, const BoardCell& boardCell);
 
     int calcScore() const {
         return m_costMovement + m_heuristic;
@@ -27,10 +30,10 @@ public:
         m_heuristic = heuristic;
     }
 
-    const std::unique_ptr<PathfindingAStarCell>* getParent() const {
+    const PathfindingAStarCellPtr* getParent() const {
         return m_parent;
     }
-    void setParent(const std::unique_ptr<PathfindingAStarCell>* parent) {
+    void setParent(const PathfindingAStarCellPtr* parent) {
         m_parent = parent;
     }
 
@@ -42,7 +45,7 @@ private:
     int m_costMovement;
     int m_heuristic;
 
-    const std::unique_ptr<PathfindingAStarCell>* m_parent;
+    const PathfindingAStarCellPtr* m_parent;
     const BoardCell& m_boardCell;
 };
 
