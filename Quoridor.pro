@@ -14,7 +14,12 @@ SOURCES += main.cpp \
     State.cpp \
     MainMenuState.cpp \
     QuitState.cpp \
-    GameState.cpp
+    GameState.cpp \
+    Observable.cpp \
+    Observer.cpp \
+    View.cpp \
+    MainMenuView.cpp \
+    GameView.cpp
 
 HEADERS += \
     Board.h \
@@ -27,4 +32,9 @@ HEADERS += \
     State.h \
     MainMenuState.h \
     QuitState.h \
-    GameState.h
+    GameState.h \
+    Observable.h \
+    Observer.h \
+    View.h \
+    MainMenuView.h \
+    GameView.h

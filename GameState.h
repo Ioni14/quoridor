@@ -4,6 +4,7 @@
 #include <list>
 #include "State.h"
 #include "Board.h"
+#include "Observable.h"
 
 class GameState : public State
 {
