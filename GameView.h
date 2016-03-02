@@ -9,6 +9,9 @@ public:
     GameView(State& model);
 
     void render();
+
+private:
+    void renderBoard();
 };
 
 #endif // GAMEVIEW_H

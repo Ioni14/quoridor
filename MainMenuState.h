@@ -47,6 +47,7 @@ public:
     void setWaitingChoiceSummary(const bool& val) {
         m_waitingChoiceSummary = val;
     }
+
     const int& getNbPlayers() const {
         return m_nbPlayers;
     }

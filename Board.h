@@ -20,16 +20,16 @@ public:
     void render();
     std::vector<std::vector<BoardCell>>& getCells();
     const std::vector<std::vector<BoardCell>>& getCells() const;
-    void putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    bool putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
     bool canPutWall(const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation) const;
     bool havePaths(const std::list<Player> &players) const;
+    bool canMoveToCell(const Player& player, const int& i, const int& j) const;
 
     const int& getSize() const {
         return m_size;
     }
 
     void setPathfindingStrategy(PathfindingPtr strategy) {
-        // On change de propriétaire donc on déplace (std::move) l'unique_ptr
         m_pathfindingStrategy = std::move(strategy);
     }
 

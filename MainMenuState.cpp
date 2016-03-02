@@ -49,6 +49,8 @@ void MainMenuState::makeChoiceMenu()
             {
                 StatePtr newState = std::make_unique<QuitState>(m_app);
                 m_app.setState(std::move(newState));
+                m_app.applyNewState();
+                return;
             }
             break;
         default:

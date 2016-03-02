@@ -31,22 +31,6 @@ void Board::create()
             putBorderWalls(i, j);
         }
     }
-
-    /*
-    for (int j = m_size - 1; j >= 0; j-=2) {
-        m_cells[7][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[8][j].setWallWest(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[7][j+1].setWallEast(BoardCell::WALL_POSITION::DOWN_RIGHT);
-        m_cells[8][j+1].setWallWest(BoardCell::WALL_POSITION::DOWN_RIGHT);
-    }
-
-    for (int i = 0; i <= m_size - 2; i+=2) {
-        m_cells[i][6].setWallSouth(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[i][7].setWallNorth(BoardCell::WALL_POSITION::UP_LEFT);
-        m_cells[i+1][6].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
-        m_cells[i+1][7].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
-    }
-    */
 }
 
 void Board::putBorderWalls(const int& i, const int& j)
@@ -63,10 +47,19 @@ void Board::putBorderWalls(const int& i, const int& j)
     }
 }
 
-void Board::putWall(const std::list<Player>& players, Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+/**
+ * @brief Board::putWall Ajoute un mur sur le plateau
+ * @param players La liste des joueurs
+ * @param player Le joueur actif
+ * @param i La colonne de la cellule visée
+ * @param j La ligne de la cellule visée
+ * @param orientation L'orientation du mur à poser
+ * @return true si le mur a été posé
+ */
+bool Board::putWall(const std::list<Player>& players, Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
     if (!canPutWall(player, i, j, orientation)) {
-        return;
+        return false;
     }
 
     if (orientation == WALL_ORIENTATION::VERTICAL) {
@@ -94,10 +87,11 @@ void Board::putWall(const std::list<Player>& players, Player& player, const int&
             m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
             m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
         }
-        return;
+        return false;
     }
 
     player.decrementWalls();
+    return true;
 }
 
 // Le mur se met en bas à droite de la cellule visée
@@ -132,10 +126,23 @@ bool Board::canPutWall(const Player& player, const int& i, const int& j, const B
     return true;
 }
 
+bool Board::canMoveToCell(const Player& player, const int& i, const int& j) const
+{
+
+
+    // Sweetdreams ? Que met-on ici ?
+
+
+
+
+
+
+    return true;
+}
+
 bool Board::havePaths(const std::list<Player>& players) const
 {
     // Test pathfinding
-    bool havePaths = true;
     for (auto& player : players) {
         bool hasPath = false;
         switch (player.getNumero()) {
@@ -173,8 +180,10 @@ bool Board::havePaths(const std::list<Player>& players) const
                 }
                 break;
         }
-        havePaths &= hasPath;
+        if (!hasPath) { // Si au moins un joueur n'a pas de chemin
+            return false;
+        }
     }
 
-    return havePaths;
+    return true;
 }
