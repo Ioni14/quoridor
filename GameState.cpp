@@ -99,7 +99,7 @@ void GameState::handleEvents()
                 }
                 break;
             default:
-                m_error = "Veuillez taper 1, 2 ou 3.";
+                m_error = "Veuillez taper 1 ou 2.";
         }
     } else if (m_waitingChoiceWallCol) {
         m_waitingChoiceWallCol = false;

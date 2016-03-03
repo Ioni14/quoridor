@@ -44,17 +44,6 @@ public:
     const Board& getBoard() const {
         return m_board;
     }
-    const Player& getPlayerActual() const {
-        return getPlayerActual();
-    }
-
-private:
-    void render();
-    void update();
-    void handleEvents();
-
-    void initPlayers();
-
     Player& getPlayerActual() {
         auto itPlayer = std::find_if(m_players.begin(), m_players.end(),
             [this](const Player& player) -> bool {
@@ -64,6 +53,13 @@ private:
         assert(itPlayer != m_players.end());
         return *itPlayer;
     }
+
+private:
+    void render();
+    void update();
+    void handleEvents();
+
+    void initPlayers();
 
 private:
     SUB_STATE m_subState;

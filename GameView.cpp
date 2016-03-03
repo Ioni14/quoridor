@@ -78,6 +78,7 @@ void GameView::renderBoard()
 void GameView::render()
 {
     GameState& state = static_cast<GameState&>(m_model);
+    const auto& playerActual = state.getPlayerActual();
 
     std::cout << std::endl;
     if (!state.getError().empty()) {
@@ -92,21 +93,21 @@ void GameView::render()
             break;
         case GameState::SUB_STATE::ACTION:
             renderBoard();
-            std::cout << "----- Joueur " << state.getPlayerActual().getNumero() << " -----" << std::endl;
+            std::cout << "----- Joueur " << playerActual.getNumero() << " -----" << std::endl;
             std::cout << "1 - Se deplacer" << std::endl;
             std::cout << "2 - Poser un mur" << std::endl;
             std::cout << "Votre choix ? ";
             state.setWaitingChoiceAction(true);
             break;
         case GameState::SUB_STATE::MOVE:
-            std::cout << "----- Joueur " << state.getPlayerActual().getNumero();
+            std::cout << "----- Joueur " << playerActual.getNumero();
             std::cout << " : Se deplacer -----" << std::endl;
             std::cout << "1 - Retour" << std::endl;
             std::cout << "Votre choix ? ";
             state.setWaitingChoiceMove(true);
             break;
         case GameState::SUB_STATE::WALL_COL:
-            std::cout << "----- Joueur " << state.getPlayerActual().getNumero();
+            std::cout << "----- Joueur " << playerActual.getNumero();
             std::cout << " : Pose un mur -----" << std::endl;
             std::cout << "Le mur sera positionne en bas a droite de la case donnee." << std::endl;
             std::cout << "Quelle colonne ? ";
