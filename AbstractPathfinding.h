@@ -13,6 +13,8 @@ public:
                          const int& iDest,
                          const int& jDest) = 0;
 
+    virtual ~AbstractPathfinding() = default;
+
 protected:
     const Board& m_board;
 };

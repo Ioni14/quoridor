@@ -18,10 +18,6 @@ Player::Player(const int& numero, const bool& ia) :
 
 void Player::move(Board& board, const int& di, const int& dj)
 {
-    if (!canMove(board, di, dj)) {
-        return;
-    }
-
     board.getCells()[m_iPos][m_jPos].setPlayer(nullptr);
 
     m_iPos += di;
@@ -63,23 +59,23 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
 
     // Tests si joueur peut sauter un autre joueur (un joueur adjacent puis aucun mur)
     if (di == 0 && dj == -2 &&
-        cells[m_iPos][m_jPos - 1].hasPlayer() &&
-        cells[m_iPos + di][m_jPos + dj].hasWallSouth()) {
+        (!cells[m_iPos][m_jPos - 1].hasPlayer() ||
+        cells[m_iPos + di][m_jPos + dj].hasWallSouth())) {
         return false;
     }
     if (di == 0 && dj == 2 &&
-        cells[m_iPos][m_jPos + 1].hasPlayer() &&
-        cells[m_iPos + di][m_jPos + dj].hasWallNorth()) {
+        (!cells[m_iPos][m_jPos + 1].hasPlayer() ||
+        cells[m_iPos + di][m_jPos + dj].hasWallNorth())) {
         return false;
     }
     if (di == -2 && dj == 0 &&
-        cells[m_iPos - 1][m_jPos].hasPlayer() &&
-        cells[m_iPos + di][m_jPos + dj].hasWallEast()) {
+        (!cells[m_iPos - 1][m_jPos].hasPlayer() ||
+        cells[m_iPos + di][m_jPos + dj].hasWallEast())) {
         return false;
     }
     if (di == 2 && dj == 0 &&
-        cells[m_iPos + 1][m_jPos].hasPlayer() &&
-        cells[m_iPos + di][m_jPos + dj].hasWallWest()) {
+        (!cells[m_iPos + 1][m_jPos].hasPlayer() ||
+        cells[m_iPos + di][m_jPos + dj].hasWallWest())) {
         return false;
     }
 
@@ -92,10 +88,10 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
     // => joueur sur la 1ère case puis mur ou joueur
 
     // cas horizontaux
-    if ((di == -1 || di == 1) &&
-        cells[m_iPos + di][m_jPos].hasPlayer() &&
-        (cells[m_iPos + di][m_jPos].hasWallWest() ||
-         cells[m_iPos + di*2][m_jPos].hasPlayer())) {
+    if (cells[m_iPos + di][m_jPos].hasPlayer()
+        && (di == -1 && (cells[m_iPos + di][m_jPos].hasWallWest() || cells[m_iPos + di*2][m_jPos].hasPlayer())
+        || di == 1 && (cells[m_iPos + di][m_jPos].hasWallEast() || cells[m_iPos + di*2][m_jPos].hasPlayer())))
+    {
         if (dj == -1 &&
             cells[m_iPos + di][m_jPos].hasWallNorth() &&
             cells[m_iPos][m_jPos].hasWallNorth()) {
@@ -107,11 +103,12 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
         }
         return true;
     }
+
     // cas verticaux
-    if ((dj == -1 || dj == 1) &&
-        cells[m_iPos][m_jPos + dj].hasPlayer() &&
-        (cells[m_iPos][m_jPos + dj].hasWallWest() ||
-         cells[m_iPos][m_jPos + dj*2].hasPlayer())) {
+    if (cells[m_iPos][m_jPos + dj].hasPlayer()
+        && (dj == -1 && (cells[m_iPos][m_jPos + dj].hasWallNorth() || cells[m_iPos][m_jPos + dj*2].hasPlayer())
+        || dj == 1 && (cells[m_iPos][m_jPos + dj].hasWallSouth() || cells[m_iPos][m_jPos + dj*2].hasPlayer())))
+    {
         if (di == -1 &&
             cells[m_iPos][m_jPos + dj].hasWallWest() &&
             cells[m_iPos][m_jPos].hasWallWest()) {

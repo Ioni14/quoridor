@@ -29,8 +29,8 @@ public:
     void setWallWest(const WALL_POSITION& val);
 
     const Player* getPlayer() const;
-    void setPlayer(const Player* player);
     bool hasPlayer() const;
+    void setPlayer(const Player* player);
 
     const int& getIPos() const;
     const int& getJPos() const;

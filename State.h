@@ -13,6 +13,7 @@ public:
 
 public:
     State(Quoridor& app);
+    virtual ~State() = default;
 
     virtual void render() = 0;
     virtual void update() = 0;

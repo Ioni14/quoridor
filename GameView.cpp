@@ -79,6 +79,7 @@ void GameView::render()
 {
     GameState& state = static_cast<GameState&>(m_model);
     const auto& playerActual = state.getPlayerActual();
+    const auto& board = state.getBoard();
 
     std::cout << std::endl;
     if (!state.getError().empty()) {
@@ -100,9 +101,73 @@ void GameView::render()
             state.setWaitingChoiceAction(true);
             break;
         case GameState::SUB_STATE::MOVE:
+
             std::cout << "----- Joueur " << playerActual.getNumero();
             std::cout << " : Se deplacer -----" << std::endl;
-            std::cout << "1 - Retour" << std::endl;
+            std::cout << "0 - Retour" << std::endl;
+            {
+                int numMove(1);
+                if (playerActual.canMove(board, 1, 0)) {
+                    std::cout << numMove << " - Droite" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{1, 0});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, -1, 0)) {
+                    std::cout << numMove << " - Gauche" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{-1, 0});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 0, 1)) {
+                    std::cout << numMove << " - Bas" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{0, 1});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 0, -1)) {
+                    std::cout << numMove << " - Haut" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{0, -1});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 2, 0)) {
+                    std::cout << numMove << " - Sauter droite" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{2, 0});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, -2, 0)) {
+                    std::cout << numMove << " - Sauter gauche" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{-2, 0});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 0, 2)) {
+                    std::cout << numMove << " - Sauter bas" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{0, 2});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 0, -2)) {
+                    std::cout << numMove << " - Sauter haut" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{0, -2});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, -1, -1)) {
+                    std::cout << numMove << " - Diagonale : Haut / Gauche" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{-1, -1});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 1, -1)) {
+                    std::cout << numMove << " - Diagonale : Haut / Droite" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{1, -1});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, 1, 1)) {
+                    std::cout << numMove << " - Diagonale : Bas / Droite" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{1, 1});
+                    numMove++;
+                }
+                if (playerActual.canMove(board, -1, 1)) {
+                    std::cout << numMove << " - Diagonale : Bas / Gauche" << std::endl;
+                    state.addMoveChoice(numMove, std::vector<int>{-1, 1});
+                    numMove++;
+                }
+            }
             std::cout << "Votre choix ? ";
             state.setWaitingChoiceMove(true);
             break;

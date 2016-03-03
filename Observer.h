@@ -11,7 +11,7 @@ public:
     typedef std::shared_ptr<Observer> ObserverPtr;
 
 public:
-    virtual ~Observer() {}
+    virtual ~Observer() = default;
     virtual void onNotify(const Observable& listener) = 0;
 };
 

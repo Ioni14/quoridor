@@ -11,6 +11,7 @@ public:
 
 public:
     View(State& model);
+    virtual ~View() = default;
 
     virtual void onNotify(const Observable& listener);
     virtual void render() = 0;

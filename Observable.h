@@ -11,6 +11,8 @@ public:
     void addObserver(Observer::ObserverPtr observer);
     void removeObserver(Observer::ObserverPtr observer);
 
+    virtual ~Observable() = default;
+
 protected:
     std::vector<Observer::ObserverPtr> m_observers;
 };

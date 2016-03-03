@@ -126,18 +126,59 @@ bool Board::canPutWall(const Player& player, const int& i, const int& j, const B
     return true;
 }
 
-bool Board::canMoveToCell(const Player& player, const int& i, const int& j) const
+std::vector<const BoardCell*> Board::canMoveToCell(const Player& player) const
 {
+    std::vector<const BoardCell*> walkableCells(0);
+
+    auto& i = player.getIPos();
+    auto& j = player.getJPos();
+
+    if (i + 1 < m_size) {
+        // Est-ce que la case est accessible ?
+        if (!m_cells[i][j].hasWallEast() && !m_cells[i+1][j].hasPlayer()) {
+            walkableCells.push_back(&(m_cells[i+1][j]));
+        } else if (i + 2 < m_size) {
+
+            // La case n'est pas accessible
+            // Peut-être qu'on peut sauter un joueur ?
+
+            if (!m_cells[i][j].hasWallEast()
+                && !m_cells[i+1][j].hasWallEast()
+                && m_cells[i+1][j].hasPlayer()
+                && !m_cells[i+2][j].hasPlayer()) {
+                walkableCells.push_back(&(m_cells[i+2][j]));
+            } else {
+                // Sauter un joueur n'est pas possible
+                // Peut-être qu'on peut aller en diagonale ?
+
+                if (!m_cells[i][j].hasWallEast()
+                    && m_cells[i+1][j].hasPlayer()
+                    && (m_cells[i+1][j].hasWallEast() || m_cells[i+2][j].hasPlayer())) {
+
+                }
 
 
-    // Sweetdreams ? Que met-on ici ?
+            }
 
 
 
+        }
 
+    }
 
+    if (i - 1 >= 0 && !m_cells[i][j].hasWallWest() && !m_cells[i-1][j].hasPlayer()) {
+        walkableCells.push_back(&(m_cells[i-1][j]));
+    }
 
-    return true;
+    if (j + 1 < m_size && !m_cells[i][j].hasWallSouth() && !m_cells[i][j + 1].hasPlayer()) {
+        walkableCells.push_back(&(m_cells[i][j + 1]));
+    }
+
+    if (j - 1 >= 0 && !m_cells[i][j].hasWallNorth() && !m_cells[i][j - 1].hasPlayer()) {
+        walkableCells.push_back(&(m_cells[i][j - 1]));
+    }
+
+    return walkableCells;
 }
 
 bool Board::havePaths(const std::list<Player>& players) const

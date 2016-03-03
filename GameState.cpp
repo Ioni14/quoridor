@@ -13,6 +13,7 @@ GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardS
     m_wallCol(0),
     m_wallRow(0),
     m_wallDir(Board::WALL_ORIENTATION::VERTICAL),
+    m_moveChoices(),
     m_error(""),
     m_loadingEnded(false),
     m_waitingChoiceAction(false),
@@ -72,9 +73,6 @@ void GameState::update()
     }
 
     /*
-    m_board.putWall(m_players, *(m_players.begin()), 5, 4, Board::WALL_ORIENTATION::VERTICAL);
-    m_board.putWall(m_players, *(m_players.begin()), 5, 6, Board::WALL_ORIENTATION::HORIZONTAL);
-
     for (auto it = m_players.begin(); it != m_players.end(); ++it) {
         it->move(m_board, 1, 0);
     }
@@ -90,6 +88,7 @@ void GameState::handleEvents()
         switch (choice) {
             case 1:
                 m_subState = SUB_STATE::MOVE;
+                m_moveChoices.clear();
                 break;
             case 2:
                 if (!getPlayerActual().hasWalls()) {
@@ -100,6 +99,22 @@ void GameState::handleEvents()
                 break;
             default:
                 m_error = "Veuillez taper 1 ou 2.";
+        }
+    } else if (m_waitingChoiceMove) {
+        m_waitingChoiceMove = false;
+        int choice(0);
+        std::cin >> choice;
+        if (choice == 0) {
+            m_subState = SUB_STATE::ACTION;
+        } else {
+            auto itMoveChoice = m_moveChoices.find(choice);
+            if (itMoveChoice == m_moveChoices.end()) {
+                m_error = "Veuillez taper un nombre entre 0 et " + m_moveChoices.size();
+                m_error += " compris.";
+            }
+            getPlayerActual().move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
+            m_playerActual = m_playerActual % m_nbPlayers + 1;
+            m_subState = SUB_STATE::ACTION;
         }
     } else if (m_waitingChoiceWallCol) {
         m_waitingChoiceWallCol = false;

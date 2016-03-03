@@ -4,6 +4,7 @@
 #include <list>
 #include <algorithm>
 #include <cassert>
+#include <map>
 #include "State.h"
 #include "Board.h"
 #include "Observable.h"
@@ -53,6 +54,9 @@ public:
         assert(itPlayer != m_players.end());
         return *itPlayer;
     }
+    void addMoveChoice(const int& num, std::vector<int> coords) {
+        m_moveChoices.insert(std::make_pair(num, coords));
+    }
 
 private:
     void render();
@@ -72,6 +76,7 @@ private:
     int m_wallCol;
     int m_wallRow;
     Board::WALL_ORIENTATION m_wallDir;
+    std::map<int, std::vector<int>> m_moveChoices;
 
     std::string m_error;
     bool m_loadingEnded;
