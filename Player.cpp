@@ -89,8 +89,8 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
 
     // cas horizontaux
     if (cells[m_iPos + di][m_jPos].hasPlayer()
-        && (di == -1 && (cells[m_iPos + di][m_jPos].hasWallWest() || cells[m_iPos + di*2][m_jPos].hasPlayer())
-        || di == 1 && (cells[m_iPos + di][m_jPos].hasWallEast() || cells[m_iPos + di*2][m_jPos].hasPlayer())))
+        && ((di == -1 && (cells[m_iPos + di][m_jPos].hasWallWest() || cells[m_iPos + di*2][m_jPos].hasPlayer()))
+        || (di == 1 && (cells[m_iPos + di][m_jPos].hasWallEast() || cells[m_iPos + di*2][m_jPos].hasPlayer()))))
     {
         if (dj == -1 &&
             cells[m_iPos + di][m_jPos].hasWallNorth() &&
@@ -106,8 +106,8 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
 
     // cas verticaux
     if (cells[m_iPos][m_jPos + dj].hasPlayer()
-        && (dj == -1 && (cells[m_iPos][m_jPos + dj].hasWallNorth() || cells[m_iPos][m_jPos + dj*2].hasPlayer())
-        || dj == 1 && (cells[m_iPos][m_jPos + dj].hasWallSouth() || cells[m_iPos][m_jPos + dj*2].hasPlayer())))
+        && ((dj == -1 && (cells[m_iPos][m_jPos + dj].hasWallNorth() || cells[m_iPos][m_jPos + dj*2].hasPlayer()))
+        || (dj == 1 && (cells[m_iPos][m_jPos + dj].hasWallSouth() || cells[m_iPos][m_jPos + dj*2].hasPlayer()))))
     {
         if (di == -1 &&
             cells[m_iPos][m_jPos + dj].hasWallWest() &&

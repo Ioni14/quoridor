@@ -39,8 +39,7 @@ void MainMenuState::update()
 
 void MainMenuState::makeChoiceMenu()
 {
-    int choice(0);
-    std::cin >> choice;
+    int choice = State::promptInteger();
     switch (choice) {
         case 1:
             m_subState = SUB_STATE::PLAY;
@@ -53,6 +52,7 @@ void MainMenuState::makeChoiceMenu()
                 return;
             }
             break;
+        case -1:
         default:
             m_error = "Veuillez taper 1 ou 2.";
     }
@@ -60,8 +60,7 @@ void MainMenuState::makeChoiceMenu()
 
 void MainMenuState::makeChoicePlay()
 {
-    int choice(0);
-    std::cin >> choice;
+    int choice = State::promptInteger();
     switch (choice) {
         case 1:
             m_subState = SUB_STATE::PLAYERS;
@@ -83,8 +82,7 @@ void MainMenuState::makeChoicePlay()
 
 void MainMenuState::makeChoicePlayers()
 {
-    int choice(0);
-    std::cin >> choice;
+    int choice = State::promptInteger();
     switch (choice) {
         case 1:
             m_players.push_back(Player(m_playerActual++));
@@ -104,6 +102,7 @@ void MainMenuState::makeChoicePlayers()
                 m_players.pop_back();
             }
             break;
+        case -1:
         default:
             m_error = "Veuillez taper 1, 2 ou 3.";
     }
@@ -111,8 +110,7 @@ void MainMenuState::makeChoicePlayers()
 
 void MainMenuState::makeChoiceBoardSize()
 {
-    int choice(0);
-    std::cin >> choice;
+    int choice = State::promptInteger();
     if (choice == 0) {
         m_playerActual--;
         m_players.pop_back();
@@ -131,8 +129,7 @@ void MainMenuState::makeChoiceBoardSize()
 
 void MainMenuState::makeChoiceSummary()
 {
-    int choice(0);
-    std::cin >> choice;
+    int choice = State::promptInteger();
     switch (choice) {
         case 1:
             {
@@ -148,6 +145,7 @@ void MainMenuState::makeChoiceSummary()
         case 2:
             m_subState = SUB_STATE::BOARD_SIZE;
             break;
+        case -1:
         default:
             m_error = "Veuillez taper 1 ou 2.";
     }

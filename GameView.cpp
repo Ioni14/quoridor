@@ -101,7 +101,6 @@ void GameView::render()
             state.setWaitingChoiceAction(true);
             break;
         case GameState::SUB_STATE::MOVE:
-
             std::cout << "----- Joueur " << playerActual.getNumero();
             std::cout << " : Se deplacer -----" << std::endl;
             std::cout << "0 - Retour" << std::endl;
@@ -187,6 +186,11 @@ void GameView::render()
             std::cout << "2 - Horizontal" << std::endl;
             std::cout << "Quelle orientation ? ";
             state.setWaitingChoiceWallDir(true);
+            break;
+        case GameState::SUB_STATE::WIN:
+            renderBoard();
+            std::cout << "Le joueur " << playerActual.getNumero() << " gagne !" << std::endl;
+            state.setWaitingChoiceWin(true);
             break;
     }
 

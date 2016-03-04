@@ -21,6 +21,8 @@ public:
 
     void notifyObservers();
 
+    static int promptInteger();
+
 protected:
     Quoridor& m_app;
 };

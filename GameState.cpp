@@ -1,6 +1,9 @@
 #include "GameState.h"
 
 #include <iostream>
+#include "Quoridor.h"
+#include "MainMenuState.h"
+#include "MainMenuView.h"
 
 GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardSize) :
     State(app),
@@ -20,7 +23,8 @@ GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardS
     m_waitingChoiceMove(false),
     m_waitingChoiceWallCol(false),
     m_waitingChoiceWallRow(false),
-    m_waitingChoiceWallDir(false)
+    m_waitingChoiceWallDir(false),
+    m_waitingChoiceWin(false)
 {
     initPlayers();
 }
@@ -71,93 +75,138 @@ void GameState::update()
         m_loadingEnded = false;
         m_subState = SUB_STATE::ACTION;
     }
+}
 
-    /*
-    for (auto it = m_players.begin(); it != m_players.end(); ++it) {
-        it->move(m_board, 1, 0);
+void GameState::makeChoiceAction()
+{
+    int choice = State::promptInteger();
+    switch (choice) {
+        case 1:
+            m_subState = SUB_STATE::MOVE;
+            m_moveChoices.clear();
+            break;
+        case 2:
+            if (!getPlayerActual().hasWalls()) {
+                m_error = "Vous n'avez plus de mur.";
+            } else {
+                m_subState = SUB_STATE::WALL_COL;
+            }
+            break;
+        case -1:
+        default:
+            m_error = "Veuillez taper 1 ou 2.";
     }
-    */
+}
+
+void GameState::makeChoiceMove()
+{
+    int choice = State::promptInteger();
+    if (choice == 0) {
+        m_subState = SUB_STATE::ACTION;
+    } else {
+        auto itMoveChoice = m_moveChoices.find(choice);
+        if (itMoveChoice == m_moveChoices.end()) {
+            m_error = "Veuillez taper un nombre entre 0 et " + m_moveChoices.size();
+            m_error += " compris.";
+        }
+        auto& playerActual = getPlayerActual();
+        playerActual.move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
+
+        // Check si un joueur a gagné
+        if (hasWon(playerActual)) {
+            m_subState = SUB_STATE::WIN;
+        } else {
+            m_playerActual = m_playerActual % m_nbPlayers + 1;
+            m_subState = SUB_STATE::ACTION;
+        }
+    }
+}
+
+void GameState::makeChoiceWallCol()
+{
+    int choice = State::promptInteger();
+    if (choice < 1 || choice > m_board.getSize()) {
+        m_error = "Vous devez indiquer une colonne comprise entre 1 et " + m_board.getSize();
+    } else {
+        m_wallCol = choice - 1;
+        m_subState = SUB_STATE::WALL_ROW;
+    }
+}
+
+void GameState::makeChoiceWallRow()
+{
+    int choice = State::promptInteger();
+    if (choice < 1 || choice > m_board.getSize()) {
+        m_error = "Vous devez indiquer une ligne comprise entre 1 et " + m_board.getSize();
+    } else {
+        m_wallRow = choice - 1;
+        m_subState = SUB_STATE::WALL_DIR;
+    }
+}
+
+void GameState::makeChoiceWallDir()
+{
+    int choice = State::promptInteger();
+    switch (choice) {
+        case 1:
+            m_wallDir = Board::WALL_ORIENTATION::VERTICAL;
+            break;
+        case 2:
+            m_wallDir = Board::WALL_ORIENTATION::HORIZONTAL;
+            break;
+        case -1:
+        default:
+            m_error = "Veuillez taper 1 ou 2.";
+    }
+    if (choice == 1 || choice == 2) {
+        auto isPut = m_board.putWall(m_players, getPlayerActual(), m_wallCol, m_wallRow, m_wallDir);
+        if (isPut) {
+            m_playerActual = m_playerActual % m_nbPlayers + 1;
+        } else {
+            m_error = "Ce mur ne peut etre positionne a cet endroit.";
+        }
+        m_subState = SUB_STATE::ACTION;
+    }
+}
+
+void GameState::makeChoiceWin()
+{
+    // La partie est finie : on revient sur le menu principal
+    StatePtr newState = std::make_unique<MainMenuState>(m_app);
+    View::ViewPtr newView = std::make_shared<MainMenuView>(*newState);
+    newState->addObserver(newView);
+    m_app.setState(std::move(newState));
+    m_app.setView(newView);
+    m_app.applyNewState();
 }
 
 void GameState::handleEvents()
 {
     if (m_waitingChoiceAction) {
         m_waitingChoiceAction = false;
-        int choice(0);
-        std::cin >> choice;
-        switch (choice) {
-            case 1:
-                m_subState = SUB_STATE::MOVE;
-                m_moveChoices.clear();
-                break;
-            case 2:
-                if (!getPlayerActual().hasWalls()) {
-                    m_error = "Vous n'avez plus de mur.";
-                } else {
-                    m_subState = SUB_STATE::WALL_COL;
-                }
-                break;
-            default:
-                m_error = "Veuillez taper 1 ou 2.";
-        }
+        makeChoiceAction();
     } else if (m_waitingChoiceMove) {
         m_waitingChoiceMove = false;
-        int choice(0);
-        std::cin >> choice;
-        if (choice == 0) {
-            m_subState = SUB_STATE::ACTION;
-        } else {
-            auto itMoveChoice = m_moveChoices.find(choice);
-            if (itMoveChoice == m_moveChoices.end()) {
-                m_error = "Veuillez taper un nombre entre 0 et " + m_moveChoices.size();
-                m_error += " compris.";
-            }
-            getPlayerActual().move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
-            m_playerActual = m_playerActual % m_nbPlayers + 1;
-            m_subState = SUB_STATE::ACTION;
-        }
+        makeChoiceMove();
     } else if (m_waitingChoiceWallCol) {
         m_waitingChoiceWallCol = false;
-        int choice(0);
-        std::cin >> choice;
-        if (choice < 1 || choice > m_board.getSize()) {
-            m_error = "Vous devez indiquer une colonne comprise entre 1 et " + m_board.getSize();
-        } else {
-            m_wallCol = choice - 1;
-            m_subState = SUB_STATE::WALL_ROW;
-        }
+        makeChoiceWallCol();
     } else if (m_waitingChoiceWallRow) {
         m_waitingChoiceWallRow = false;
-        int choice(0);
-        std::cin >> choice;
-        if (choice < 1 || choice > m_board.getSize()) {
-            m_error = "Vous devez indiquer une ligne comprise entre 1 et " + m_board.getSize();
-        } else {
-            m_wallRow = choice - 1;
-            m_subState = SUB_STATE::WALL_DIR;
-        }
+        makeChoiceWallRow();
     } else if (m_waitingChoiceWallDir) {
         m_waitingChoiceWallDir = false;
-        int choice(0);
-        std::cin >> choice;
-        switch (choice) {
-            case 1:
-                m_wallDir = Board::WALL_ORIENTATION::VERTICAL;
-                break;
-            case 2:
-                m_wallDir = Board::WALL_ORIENTATION::HORIZONTAL;
-                break;
-            default:
-                m_error = "Veuillez taper 1 ou 2.";
-        }
-        if (choice == 1 || choice == 2) {
-            auto isPut = m_board.putWall(m_players, getPlayerActual(), m_wallCol, m_wallRow, m_wallDir);
-            if (isPut) {
-                m_playerActual = m_playerActual % m_nbPlayers + 1;
-            } else {
-                m_error = "Ce mur ne peut etre positionne a cet endroit.";
-            }
-            m_subState = SUB_STATE::ACTION;
-        }
+        makeChoiceWallDir();
+    } else if (m_waitingChoiceWin) {
+        m_waitingChoiceWin = false;
+        makeChoiceWin();
     }
+}
+
+bool GameState::hasWon(const Player& player) const
+{
+    return ((player.getNumero() == 1 && player.getJPos() == 0)
+            || (player.getNumero() == 2 && player.getJPos() == m_board.getSize() - 1)
+            || (player.getNumero() == 3 && player.getIPos() == m_board.getSize() - 1)
+            || (player.getNumero() == 4 && player.getJPos() == 0));
 }

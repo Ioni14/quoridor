@@ -23,7 +23,6 @@ public:
     bool putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
     bool canPutWall(const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation) const;
     bool havePaths(const std::list<Player> &players) const;
-    std::vector<const BoardCell*> canMoveToCell(const Player& player) const;
 
     const int& getSize() const {
         return m_size;
