@@ -12,6 +12,13 @@ public:
 
 private:
     void renderBoard();
+    void renderLoading();
+    void renderAction();
+    void renderMove();
+    void renderWallCol();
+    void renderWallRow();
+    void renderWallDir();
+    void renderWin();
 };
 
 #endif // GAMEVIEW_H
