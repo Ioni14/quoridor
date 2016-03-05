@@ -2,6 +2,7 @@
 #define MAINMENUSTATE_H
 
 #include <list>
+#include <sstream>
 #include "Player.h"
 #include "State.h"
 
@@ -23,8 +24,8 @@ public:
     void makeChoiceBoardSize();
     void makeChoiceSummary();
 
-    std::string& getError() {
-        return m_error;
+    std::string getError() const {
+        return m_error.str();
     }
     const SUB_STATE& getSubState() const {
         return m_subState;
@@ -64,7 +65,7 @@ public:
 private:
     SUB_STATE m_subState;
 
-    std::string m_error;
+    std::ostringstream m_error;
     bool m_titleEnded;
     bool m_waitingChoiceMenu;
     bool m_waitingChoicePlay;

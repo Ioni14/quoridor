@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cassert>
 #include <map>
+#include <sstream>
 #include "State.h"
 #include "Board.h"
 #include "Observable.h"
@@ -20,8 +21,8 @@ public:
     const SUB_STATE& getSubState() const {
         return m_subState;
     }
-    std::string& getError() {
-        return m_error;
+    std::string getError() const {
+        return m_error.str();
     }
     void setWaitingChoiceEnded(const bool& val) {
         m_loadingEnded = val;
@@ -75,6 +76,7 @@ private:
     void makeChoiceWallRow();
     void makeChoiceWallDir();
     void makeChoiceWin();
+
 private:
     SUB_STATE m_subState;
 
@@ -88,7 +90,7 @@ private:
     Board::WALL_ORIENTATION m_wallDir;
     std::map<int, std::vector<int>> m_moveChoices;
 
-    std::string m_error;
+    std::ostringstream m_error;
     bool m_loadingEnded;
     bool m_waitingChoiceAction;
     bool m_waitingChoiceMove;

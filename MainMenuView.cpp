@@ -79,12 +79,12 @@ void MainMenuView::renderSummary()
 
 void MainMenuView::render()
 {
-    MainMenuState& state = static_cast<MainMenuState&>(m_model);
+    const auto& state = static_cast<MainMenuState&>(m_model);
 
     std::cout << std::endl;
-    if (!state.getError().empty()) {
-        std::cerr << state.getError() << std::endl;
-        state.getError().clear();
+    auto error = state.getError();
+    if (!error.empty()) {
+        std::cerr << error << std::endl;
     }
 
     switch (state.getSubState()) {

@@ -10,7 +10,7 @@
 MainMenuState::MainMenuState(Quoridor& app) :
     State(app),
     m_subState(SUB_STATE::TITLE),
-    m_error(""),
+    m_error(),
     m_titleEnded(false),
     m_waitingChoiceMenu(false),
     m_waitingChoicePlay(false),
@@ -54,7 +54,7 @@ void MainMenuState::makeChoiceMenu()
             break;
         case -1:
         default:
-            m_error = "Veuillez taper 1 ou 2.";
+            m_error << "Veuillez taper 1 ou 2.";
     }
 }
 
@@ -76,7 +76,7 @@ void MainMenuState::makeChoicePlay()
             m_subState = SUB_STATE::MENU;
             break;
         default:
-            m_error = "Veuillez taper 1, 2 ou 3.";
+            m_error << "Veuillez taper 1, 2 ou 3.";
     }
 }
 
@@ -92,7 +92,7 @@ void MainMenuState::makeChoicePlayers()
             }
             break;
         case 2:
-            m_error = "Desole, mais l'IA n'est pas encore implementee.";
+            m_error << "Desole, mais l'IA n'est pas encore implementee.";
             break;
         case 3:
             if (m_playerActual == 1) {
@@ -104,7 +104,7 @@ void MainMenuState::makeChoicePlayers()
             break;
         case -1:
         default:
-            m_error = "Veuillez taper 1, 2 ou 3.";
+            m_error << "Veuillez taper 1, 2 ou 3.";
     }
 }
 
@@ -117,13 +117,13 @@ void MainMenuState::makeChoiceBoardSize()
         m_subState = SUB_STATE::PLAYERS;
     } else if (choice >= 5 && choice <= 19) {
         if (choice % 2 == 0) {
-            m_error = "Veuillez entrer une taille impaire comprise entre 5 et 19.";
+            m_error << "Veuillez entrer une taille impaire comprise entre 5 et 19.";
         } else {
             m_boardSize = choice;
             m_subState = SUB_STATE::SUMMARY;
         }
     } else {
-        m_error = "Veuillez taper une valeur entre 5 et 19 ou 0.";
+        m_error << "Veuillez taper une valeur entre 5 et 19 ou 0.";
     }
 }
 
@@ -147,13 +147,13 @@ void MainMenuState::makeChoiceSummary()
             break;
         case -1:
         default:
-            m_error = "Veuillez taper 1 ou 2.";
+            m_error << "Veuillez taper 1 ou 2.";
     }
 }
 
 void MainMenuState::handleEvents()
 {
-    // On récupère ce que l'utilisateur écrit
+    m_error.str(""); // On vide la précédente erreur
     if (m_waitingChoiceMenu) {
         m_waitingChoiceMenu = false;
         makeChoiceMenu();
