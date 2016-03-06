@@ -5,7 +5,7 @@
 #include <string>
 #include "GameState.h"
 
-GameView::GameView(State &model) :
+GameView::GameView(GameState &model) :
     View(model)
 {
 }

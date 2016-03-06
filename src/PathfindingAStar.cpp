@@ -36,28 +36,18 @@ PathfindingAStar::listCellPtr::iterator PathfindingAStar::findLowestCell()
     return itMinCell;
 }
 
-/*
- * Nous aurions pu utiliser des std::weak_ptr et std::shared_ptr au lieu de std::unique_ptr
- * Pour éviter d'avoir des pointeurs de std::unique_ptr
- * Mais nous avons privilégié les performances
- */
 bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest)
 {
     m_openList.clear();
     m_closeList.clear();
 
-    // On commence par mettre la cellule où on se trouve dans la openList
     m_openList.push_back(createStartCell(iSource, jSource, iDest, jDest));
 
-    // On stopera quand il n'y aura plus de cellules à visiter
+    // On stoppera quand il n'y aura plus de cellule à visiter
     while (!m_openList.empty())
     {
         // On parcourt la openList et on récupère la cellule au plus petit score
         auto itMinCell = findLowestCell();
-        if (itMinCell == m_openList.end()) {
-            // Pas de chemin
-            return false;
-        }
 
         // On a trouvé la prochaine cellule qui semble être la plus proche de l'arrivée
         // => On l'ajoute à la closeList et on l'enlève de la openList
@@ -67,7 +57,6 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
         // On vérifie si la destination se trouve dans la closeList
         auto itCloseListDest = findCellInCloseList(iDest, jDest);
         if (itCloseListDest != m_closeList.rend()) {
-            // On a trouvé un chemin
             return true;
         }
 
@@ -75,20 +64,15 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
         auto& minCell = m_closeList.back();
         auto& cellActual = minCell->getBoardCell();
 
-        // Pour chaque cellules qu'on peut atteindre
         auto walkableCells = findWalkableCells(cellActual);
 
-        // => On calcule son score et on l'ajoute dans la openList si pas déjà fait
         for (auto itBoardCell = walkableCells.begin(); itBoardCell != walkableCells.end(); ++itBoardCell) {
 
-            // Dans closeList ?
             auto itCloseList = findCellInCloseList((*itBoardCell)->getIPos(), (*itBoardCell)->getJPos());
-            // On l'ignore si elle est dans la closeList
             if (itCloseList != m_closeList.rend()) {
                 continue;
             }
 
-            // Dans openList ?
             auto itOpenList = findCellInOpenList((*itBoardCell)->getIPos(), (*itBoardCell)->getJPos());
 
             int costMovementActual = minCell->getCostMovement() + COST_MOVEMENT;
@@ -96,7 +80,6 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
             int heuristicActual = static_cast<int>(std::abs(iDest - (*itBoardCell)->getIPos()) + std::abs(jDest - (*itBoardCell)->getJPos()));
 
             if (itOpenList == m_openList.end()) {
-                // Pas dans la openList
                 PathfindingAStarCell::AStarCellPtr aStarCell = std::make_unique<PathfindingAStarCell>(
                     costMovementActual,
                     heuristicActual,
@@ -105,9 +88,7 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
                 );
                 m_openList.push_back(std::move(aStarCell));
             } else {
-                // Déjà dans la openList
                 if (costMovementActual + heuristicActual < minCell->calcScore()) {
-                    // On a trouvé un meilleur chemin qui passe par cette cellule
                     (*itOpenList)->setCostMovement(costMovementActual);
                     (*itOpenList)->setHeuristic(heuristicActual);
                     (*itOpenList)->setParent(&minCell);

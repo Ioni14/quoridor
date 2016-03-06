@@ -2,11 +2,12 @@
 #define MAINMENUVIEW_H
 
 #include "View.h"
+#include "MainMenuState.h"
 
 class MainMenuView : public View
 {
 public:
-    MainMenuView(State& model);
+    MainMenuView(MainMenuState& model);
 
     void render();
 

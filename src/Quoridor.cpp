@@ -19,7 +19,7 @@ void Quoridor::quit()
 
 /**
  * @brief Quoridor::applyNewState
- * Procède au changement d'état après que l'ancien état ait fini son travail
+ * Procède au changement d'état après que l'ancien état a fini son travail
  */
 void Quoridor::applyNewState()
 {
@@ -42,9 +42,12 @@ void Quoridor::setView(View::ViewPtr newView)
 
 void Quoridor::initialize()
 {
-    m_state = std::make_unique<MainMenuState>(*this);
-    m_view = std::make_shared<MainMenuView>(*m_state);
-    m_state->addObserver(m_view);
+    auto newState = std::make_unique<MainMenuState>(*this);
+    auto newView = std::make_shared<MainMenuView>(*newState);
+    newState->addObserver(newView);
+    setState(std::move(newState));
+    setView(newView);
+    applyNewState();
 }
 
 void Quoridor::run()

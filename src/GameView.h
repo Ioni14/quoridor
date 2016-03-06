@@ -2,11 +2,12 @@
 #define GAMEVIEW_H
 
 #include "View.h"
+#include "GameState.h"
 
 class GameView : public View
 {
 public:
-    GameView(State& model);
+    GameView(GameState& model);
 
     void render();
 

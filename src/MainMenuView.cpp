@@ -3,7 +3,7 @@
 #include <iostream>
 #include "MainMenuState.h"
 
-MainMenuView::MainMenuView(State &model) :
+MainMenuView::MainMenuView(MainMenuState &model) :
     View(model)
 {
 }

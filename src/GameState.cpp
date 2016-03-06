@@ -172,8 +172,8 @@ void GameState::makeChoiceWallDir()
 void GameState::makeChoiceWin()
 {
     // La partie est finie : on revient sur le menu principal
-    StatePtr newState = std::make_unique<MainMenuState>(m_app);
-    View::ViewPtr newView = std::make_shared<MainMenuView>(*newState);
+    auto newState = std::make_unique<MainMenuState>(m_app);
+    auto newView = std::make_shared<MainMenuView>(*newState);
     newState->addObserver(newView);
     m_app.setState(std::move(newState));
     m_app.setView(newView);
