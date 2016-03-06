@@ -9,7 +9,7 @@
 class MainMenuState : public State
 {
 public:
-    enum SUB_STATE {TITLE, MENU, PLAY, PLAYERS, BOARD_SIZE, SUMMARY};
+    enum class SUB_STATE {TITLE, MENU, PLAY, PLAYERS, BOARD_SIZE, SUMMARY};
 
 public:
     MainMenuState(Quoridor& app);

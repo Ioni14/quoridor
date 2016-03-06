@@ -6,7 +6,7 @@
 class BoardCell
 {
 public:
-    enum WALL_POSITION {NONE, UP_LEFT, DOWN_RIGHT};
+    enum class WALL_POSITION {NONE, UP_LEFT, DOWN_RIGHT};
 
 public:
     BoardCell();

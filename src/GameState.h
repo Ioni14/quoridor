@@ -13,7 +13,7 @@
 class GameState : public State
 {
 public:
-    enum SUB_STATE {LOADING, ACTION, MOVE, WALL_COL, WALL_ROW, WALL_DIR, WIN};
+    enum class SUB_STATE {LOADING, ACTION, MOVE, WALL_COL, WALL_ROW, WALL_DIR, WIN};
 
 public:
     GameState(Quoridor& app, std::list<Player> players, const int &boardSize);

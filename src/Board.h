@@ -10,7 +10,7 @@
 class Board
 {
 public:
-    enum WALL_ORIENTATION {VERTICAL, HORIZONTAL};
+    enum class WALL_ORIENTATION {VERTICAL, HORIZONTAL};
 
     typedef std::unique_ptr<AbstractPathfinding> PathfindingPtr;
 
