@@ -26,7 +26,7 @@ int State::promptInteger()
     std::istringstream iss(line);
     int choice(0);
     iss >> choice;
-    if (!iss || ! iss.eof()) {
+    if (!iss || !iss.eof()) {
         choice = -1;
     }
     return choice;

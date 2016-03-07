@@ -201,6 +201,14 @@ void GameView::renderWin()
     state.setWaitingChoiceWin(true);
 }
 
+void GameView::renderDraw()
+{
+    renderBoard();
+    auto& state = static_cast<GameState&>(m_model);
+    std::cout << "Match nul !" << std::endl;
+    state.setWaitingChoiceDraw(true);
+}
+
 void GameView::render()
 {
     const auto& state = static_cast<GameState&>(m_model);
@@ -232,6 +240,9 @@ void GameView::render()
             break;
         case GameState::SUB_STATE::WIN:
             renderWin();
+            break;
+        case GameState::SUB_STATE::DRAW:
+            renderDraw();
             break;
     }
 

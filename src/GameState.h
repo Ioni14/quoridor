@@ -13,7 +13,7 @@
 class GameState : public State
 {
 public:
-    enum class SUB_STATE {LOADING, ACTION, MOVE, WALL_COL, WALL_ROW, WALL_DIR, WIN};
+    enum class SUB_STATE {LOADING, ACTION, MOVE, WALL_COL, WALL_ROW, WALL_DIR, WIN, DRAW};
 
 public:
     GameState(Quoridor& app, std::list<Player> players, const int &boardSize);
@@ -45,6 +45,9 @@ public:
     void setWaitingChoiceWin(const bool& val) {
         m_waitingChoiceWin = val;
     }
+    void setWaitingChoiceDraw(const bool& val) {
+        m_waitingChoiceDraw = val;
+    }
 
     const Board& getBoard() const {
         return m_board;
@@ -75,7 +78,7 @@ private:
     void makeChoiceWallCol();
     void makeChoiceWallRow();
     void makeChoiceWallDir();
-    void makeChoiceWin();
+    void finishGame();
 
 private:
     SUB_STATE m_subState;
@@ -98,6 +101,7 @@ private:
     bool m_waitingChoiceWallRow;
     bool m_waitingChoiceWallDir;
     bool m_waitingChoiceWin;
+    bool m_waitingChoiceDraw;
 };
 
 #endif // GAME_HPP

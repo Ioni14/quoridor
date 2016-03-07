@@ -7,13 +7,12 @@ class AbstractPathfinding
 {
 public:
     AbstractPathfinding(const Board& board);
+    virtual ~AbstractPathfinding() = default;
 
     virtual bool hasPath(const int& iSource,
                          const int& jSource,
                          const int& iDest,
                          const int& jDest) = 0;
-
-    virtual ~AbstractPathfinding() = default;
 
 protected:
     const Board& m_board;

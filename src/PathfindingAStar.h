@@ -19,6 +19,7 @@ public:
 
 private:
     std::vector<const BoardCell*> findWalkableCells(const BoardCell& cellActual);
+
     PathfindingAStarCell::AStarCellPtr
     createStartCell(const int& iSource, const int& jSource, const int& iDest, const int& jDest);
 

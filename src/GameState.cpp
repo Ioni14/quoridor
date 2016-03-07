@@ -24,7 +24,8 @@ GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardS
     m_waitingChoiceWallCol(false),
     m_waitingChoiceWallRow(false),
     m_waitingChoiceWallDir(false),
-    m_waitingChoiceWin(false)
+    m_waitingChoiceWin(false),
+    m_waitingChoiceDraw(false)
 {
     initPlayers();
 }
@@ -103,23 +104,27 @@ void GameState::makeChoiceMove()
     int choice = State::promptInteger();
     if (choice == 0) {
         m_subState = SUB_STATE::ACTION;
-    } else {
-        auto itMoveChoice = m_moveChoices.find(choice);
-        auto& playerActual = getPlayerActual();
-        if (itMoveChoice == m_moveChoices.end()) {
-            m_error << "Veuillez taper un nombre entre 0 et " << m_moveChoices.size() << " compris.";
-        } else {
-            playerActual.move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
-        }
-
-        // Check si un joueur a gagné
-        if (hasWon(playerActual)) {
-            m_subState = SUB_STATE::WIN;
-        } else {
-            m_playerActual = m_playerActual % m_nbPlayers + 1;
-            m_subState = SUB_STATE::ACTION;
-        }
+        return;
     }
+    if (m_moveChoices.empty()) {
+        m_subState = SUB_STATE::DRAW;
+        return;
+    }
+    auto itMoveChoice = m_moveChoices.find(choice);
+    auto& playerActual = getPlayerActual();
+    if (itMoveChoice == m_moveChoices.end()) {
+        m_error << "Veuillez taper un nombre entre 0 et " << m_moveChoices.size() << " compris.";
+    } else {
+        playerActual.move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
+    }
+
+    // Check si un joueur a gagné
+    if (hasWon(playerActual)) {
+        m_subState = SUB_STATE::WIN;
+        return;
+    }
+    m_playerActual = m_playerActual % m_nbPlayers + 1;
+    m_subState = SUB_STATE::ACTION;
 }
 
 void GameState::makeChoiceWallCol()
@@ -169,7 +174,7 @@ void GameState::makeChoiceWallDir()
     }
 }
 
-void GameState::makeChoiceWin()
+void GameState::finishGame()
 {
     // La partie est finie : on revient sur le menu principal
     auto newState = std::make_unique<MainMenuState>(m_app);
@@ -200,7 +205,10 @@ void GameState::handleEvents()
         makeChoiceWallDir();
     } else if (m_waitingChoiceWin) {
         m_waitingChoiceWin = false;
-        makeChoiceWin();
+        finishGame();
+    } else if (m_waitingChoiceDraw) {
+        m_waitingChoiceDraw = false;
+        finishGame();
     }
 }
 
@@ -208,6 +216,6 @@ bool GameState::hasWon(const Player& player) const
 {
     return ((player.getNumero() == 1 && player.getJPos() == 0)
             || (player.getNumero() == 2 && player.getJPos() == m_board.getSize() - 1)
-            || (player.getNumero() == 3 && player.getIPos() == m_board.getSize() - 1)
-            || (player.getNumero() == 4 && player.getJPos() == 0));
+            || (player.getNumero() == 3 && player.getIPos() == 0)
+            || (player.getNumero() == 4 && player.getIPos() == m_board.getSize() - 1));
 }

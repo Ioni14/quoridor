@@ -20,6 +20,7 @@ private:
     void renderWallRow();
     void renderWallDir();
     void renderWin();
+    void renderDraw();
 };
 
 #endif // GAMEVIEW_H
