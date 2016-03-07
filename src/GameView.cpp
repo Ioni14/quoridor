@@ -5,6 +5,8 @@
 #include <string>
 #include "GameState.h"
 
+namespace G36631 {
+
 GameView::GameView(GameState &model) :
     View(model)
 {
@@ -245,5 +247,7 @@ void GameView::render()
             renderDraw();
             break;
     }
+
+}
 
 }

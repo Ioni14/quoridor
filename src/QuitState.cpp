@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Quoridor.h"
 
+namespace G36631 {
+
 QuitState::QuitState(Quoridor& app):
     State(app)
 {
@@ -19,4 +21,6 @@ void QuitState::update()
 
 void QuitState::handleEvents()
 {
+}
+
 }

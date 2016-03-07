@@ -1,12 +1,15 @@
 #include "View.h"
 
+namespace G36631 {
+
 View::View(State& model) :
     m_model(model)
 {
-    //m_model.addObserver(shared_from_this()); // shared_ptr<this>
 }
 
-void View::onNotify(const Observable& listener)
+void View::onNotify()
 {
     render();
+}
+
 }

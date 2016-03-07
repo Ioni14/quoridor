@@ -1,5 +1,7 @@
 #include "PathfindingAStarCell.h"
 
+namespace G36631 {
+
 PathfindingAStarCell::PathfindingAStarCell(
         const int &heuristic,
         const BoardCell& boardCell) :
@@ -16,4 +18,6 @@ PathfindingAStarCell::PathfindingAStarCell(const int &costMovement,
     m_parent(parent),
     m_boardCell(boardCell)
 {
+}
+
 }

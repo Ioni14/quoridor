@@ -3,6 +3,8 @@
 #include <iostream>
 #include "MainMenuState.h"
 
+namespace G36631 {
+
 MainMenuView::MainMenuView(MainMenuState &model) :
     View(model)
 {
@@ -11,7 +13,7 @@ MainMenuView::MainMenuView(MainMenuState &model) :
 void MainMenuView::renderTitle()
 {
     MainMenuState& state = static_cast<MainMenuState&>(m_model);
-    std::cout << "Quoridor realise par Sweetdreams - 2016" << std::endl;
+    std::cout << "Quoridor realise par J. Keenens - 2016" << std::endl;
     std::cout << "Bienvenue sur Quoridor." << std::endl;
     state.setTitleEnded(true);
 }
@@ -107,4 +109,6 @@ void MainMenuView::render()
             renderSummary();
             break;
     }
+}
+
 }

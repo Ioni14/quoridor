@@ -7,6 +7,8 @@
 #include "GameState.h"
 #include "GameView.h"
 
+namespace G36631 {
+
 MainMenuState::MainMenuState(Quoridor& app) :
     State(app),
     m_subState(SUB_STATE::TITLE),
@@ -170,4 +172,6 @@ void MainMenuState::handleEvents()
         m_waitingChoiceSummary = false;
         makeChoiceSummary();
     }
+}
+
 }

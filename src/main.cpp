@@ -2,7 +2,7 @@
 
 int main()
 {
-    Quoridor().run();
+    G36631::Quoridor().run();
 
     return EXIT_SUCCESS;
 }

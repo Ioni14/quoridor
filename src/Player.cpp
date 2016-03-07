@@ -2,6 +2,8 @@
 
 #include "Board.h"
 
+namespace G36631 {
+
 Player::Player() :
     Player(0)
 {
@@ -123,4 +125,6 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
 
     // Aucun cas trouvé
     return false;
+}
+
 }

@@ -5,6 +5,8 @@
 #include "BoardCell.h"
 #include "PathfindingAStarCell.h"
 
+namespace G36631 {
+
 const int PathfindingAStar::COST_MOVEMENT = 1;
 
 PathfindingAStar::PathfindingAStar(const Board& board) :
@@ -148,4 +150,6 @@ PathfindingAStar::findCellInOpenList(const int& i, const int& j)
                    j == cell->getBoardCell().getJPos();
         }
     );
+}
+
 }

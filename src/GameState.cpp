@@ -5,6 +5,8 @@
 #include "MainMenuState.h"
 #include "MainMenuView.h"
 
+namespace G36631 {
+
 GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardSize) :
     State(app),
     m_subState(SUB_STATE::LOADING),
@@ -218,4 +220,6 @@ bool GameState::hasWon(const Player& player) const
             || (player.getNumero() == 2 && player.getJPos() == m_board.getSize() - 1)
             || (player.getNumero() == 3 && player.getIPos() == 0)
             || (player.getNumero() == 4 && player.getIPos() == m_board.getSize() - 1));
+}
+
 }

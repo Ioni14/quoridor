@@ -1,6 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+/**
+ * \file GameState.h
+ * \brief Définition de la classe GameState
+ * \author J. Keenens
+ * \version 0.1
+ * \date 07/03/2016
+ */
+
 #include <list>
 #include <algorithm>
 #include <cassert>
@@ -10,12 +18,36 @@
 #include "Board.h"
 #include "Observable.h"
 
+/**
+ * \namespace Espace de nom pour les projets de J. Keenens
+ */
+namespace G36631 {
+
+/**
+ * \class GameState
+ * \brief Représente l'état du jeu en cours de partie
+ */
 class GameState : public State
 {
 public:
-    enum class SUB_STATE {LOADING, ACTION, MOVE, WALL_COL, WALL_ROW, WALL_DIR, WIN, DRAW};
+    enum class SUB_STATE {
+        LOADING, /**< Chargement du jeu */
+        ACTION, /**< Demande de l'action à effectuer pour le joueur */
+        MOVE, /**< Demande du déplacement du joueur */
+        WALL_COL, /**< Demande de la colonne du mur */
+        WALL_ROW, /**< Demande de la ligne du mur */
+        WALL_DIR, /**< Demande de la direction du mur */
+        WIN, /**< Gagnant de la partie */
+        DRAW /**< Partie nulle */
+    };
 
 public:
+    /**
+     * \brief Constructeur logique
+     * \param app : référence sur la classe principale du jeu
+     * \param players : la liste des joueurs
+     * \param boardSize : la taille du plateau
+     */
     GameState(Quoridor& app, std::list<Player> players, const int &boardSize);
 
     const SUB_STATE& getSubState() const {
@@ -91,7 +123,7 @@ private:
     int m_wallCol;
     int m_wallRow;
     Board::WALL_ORIENTATION m_wallDir;
-    std::map<int, std::vector<int>> m_moveChoices;
+    std::map<int, std::vector<int>> m_moveChoices; /**< Les choix possibles pour le déplacement du joueur actuel */
 
     std::ostringstream m_error;
     bool m_loadingEnded;
@@ -103,5 +135,7 @@ private:
     bool m_waitingChoiceWin;
     bool m_waitingChoiceDraw;
 };
+
+}
 
 #endif // GAME_HPP

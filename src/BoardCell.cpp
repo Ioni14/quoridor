@@ -1,5 +1,7 @@
 #include "BoardCell.h"
 
+namespace G36631 {
+
 BoardCell::BoardCell() :
     m_wallNorth(WALL_POSITION::NONE),
     m_wallSouth(WALL_POSITION::NONE),
@@ -71,4 +73,6 @@ const int& BoardCell::getIPos() const {
 }
 const int& BoardCell::getJPos() const {
     return m_jPos;
+}
+
 }

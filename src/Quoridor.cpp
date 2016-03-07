@@ -3,6 +3,8 @@
 #include <memory>
 #include "MainMenuState.h"
 
+namespace G36631 {
+
 Quoridor::Quoridor() :
     m_state(nullptr),
     m_newState(nullptr),
@@ -57,4 +59,6 @@ void Quoridor::run()
         m_state->update();
         m_state->render();
     }
+}
+
 }

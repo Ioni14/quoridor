@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace G36631 {
+
 State::State(Quoridor &app) :
     m_app(app)
 {
@@ -11,14 +13,10 @@ State::State(Quoridor &app) :
 void State::notifyObservers()
 {
     for (auto& observer : m_observers) {
-        observer->onNotify(*this);
+        observer->onNotify();
     }
 }
 
-/**
- * @brief Reads the input in console and returns the entered integer
- * @return The entered integer or -1 if there's no integer
- */
 int State::promptInteger()
 {
     std::string line;
@@ -30,4 +28,6 @@ int State::promptInteger()
         choice = -1;
     }
     return choice;
+}
+
 }

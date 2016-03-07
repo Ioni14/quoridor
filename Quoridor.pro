@@ -31,7 +31,6 @@ SOURCES += \
     src/MainMenuState.cpp \
     src/MainMenuView.cpp \
     src/Observable.cpp \
-    src/Observer.cpp \
     src/PathfindingAStar.cpp \
     src/PathfindingAStarCell.cpp \
     src/Player.cpp \

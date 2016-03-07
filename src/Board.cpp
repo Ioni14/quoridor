@@ -2,6 +2,8 @@
 
 #include "PathfindingAStar.h"
 
+namespace G36631 {
+
 Board::Board(const int& size):
     m_cells(0),
     m_size(size),
@@ -172,4 +174,6 @@ bool Board::havePaths(const std::list<Player>& players) const
     }
 
     return true;
+}
+
 }

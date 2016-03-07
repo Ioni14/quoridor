@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+namespace G36631 {
+
 void Observable::addObserver(Observer::ObserverPtr observer)
 {
     m_observers.push_back(observer);
@@ -14,4 +16,6 @@ void Observable::removeObserver(Observer::ObserverPtr observer)
         return;
     }
     m_observers.erase(it);
+}
+
 }
