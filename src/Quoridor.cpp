@@ -42,6 +42,11 @@ void Quoridor::setView(View::ViewPtr newView)
     m_view = newView;
 }
 
+State::StatePtr& Quoridor::getState()
+{
+    return m_state;
+}
+
 void Quoridor::initialize()
 {
     auto newState = std::make_unique<MainMenuState>(*this);
@@ -50,6 +55,11 @@ void Quoridor::initialize()
     setState(std::move(newState));
     setView(newView);
     applyNewState();
+}
+
+void Quoridor::reset()
+{
+    initialize();
 }
 
 void Quoridor::run()

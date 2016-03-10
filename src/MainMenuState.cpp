@@ -87,7 +87,7 @@ void MainMenuState::makeChoicePlayers()
     int choice = State::promptInteger();
     switch (choice) {
         case 1:
-            m_players.push_back(Player(m_playerActual++));
+            addPlayer(m_playerActual++);
             if (m_playerActual > m_nbPlayers) {
                 // On a entré tous les joueurs
                 m_subState = SUB_STATE::BOARD_SIZE;
@@ -95,6 +95,7 @@ void MainMenuState::makeChoicePlayers()
             break;
         case 2:
             m_error << "Desole, mais l'IA n'est pas encore implementee.";
+            //addPlayer(m_playerActual++, true);
             break;
         case 3:
             if (m_playerActual == 1) {
@@ -121,7 +122,7 @@ void MainMenuState::makeChoiceBoardSize()
         if (choice % 2 == 0) {
             m_error << "Veuillez entrer une taille impaire comprise entre 5 et 19.";
         } else {
-            m_boardSize = choice;
+            setBoardSize(choice);
             m_subState = SUB_STATE::SUMMARY;
         }
     } else {
@@ -134,16 +135,8 @@ void MainMenuState::makeChoiceSummary()
     int choice = State::promptInteger();
     switch (choice) {
         case 1:
-            {
-                auto newState = std::make_unique<GameState>(m_app, std::move(m_players), m_boardSize);
-                auto newView = std::make_shared<GameView>(*newState);
-                newState->addObserver(newView);
-                m_app.setState(std::move(newState));
-                m_app.setView(newView);
-                m_app.applyNewState();
-                return;
-            }
-            break;
+            launchGame();
+            return;
         case 2:
             m_subState = SUB_STATE::BOARD_SIZE;
             break;
@@ -172,6 +165,21 @@ void MainMenuState::handleEvents()
         m_waitingChoiceSummary = false;
         makeChoiceSummary();
     }
+}
+
+void MainMenuState::addPlayer(const int& numero, const bool& ia)
+{
+    m_players.push_back(Player(numero, ia));
+}
+
+void MainMenuState::launchGame()
+{
+    auto newState = std::make_unique<GameState>(m_app, std::move(m_players), m_boardSize);
+    auto newView = std::make_shared<GameView>(*newState);
+    newState->addObserver(newView);
+    m_app.setState(std::move(newState));
+    m_app.setView(newView);
+    m_app.applyNewState();
 }
 
 }

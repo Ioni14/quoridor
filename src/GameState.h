@@ -16,7 +16,6 @@
 #include <sstream>
 #include "State.h"
 #include "Board.h"
-#include "Observable.h"
 
 /**
  * \namespace Espace de nom pour les projets de J. Keenens

@@ -43,6 +43,13 @@ public:
      * \param newState : le prochain état
      */
     void setState(State::StatePtr newState);
+
+    /**
+     * \brief Récupère l'état du jeu actuel
+     * \return l'état du jeu
+     */
+    State::StatePtr& getState();
+
     /**
      * \brief Change la vue actuelle du jeu
      * \param newView : la nouvelle vue
@@ -53,6 +60,11 @@ public:
      * \brief Applique les changements du nouvel état
      */
     void applyNewState();
+
+    /**
+     * \brief Crée une nouvelle partie
+     */
+    void reset();
 
 private:
     /**

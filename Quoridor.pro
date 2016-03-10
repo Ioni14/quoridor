@@ -1,7 +1,8 @@
 TEMPLATE = app
+QT += core widgets
+
 CONFIG += console c++14
 CONFIG -= app_bundle
-CONFIG -= qt
 
 HEADERS += \
     src/AbstractPathfinding.h \
@@ -19,7 +20,9 @@ HEADERS += \
     src/QuitState.h \
     src/Quoridor.h \
     src/State.h \
-    src/View.h
+    src/View.h \
+    src/MainWindow.h \
+    src/BoardView.h
 
 SOURCES += \
     src/AbstractPathfinding.cpp \
@@ -37,4 +40,9 @@ SOURCES += \
     src/QuitState.cpp \
     src/Quoridor.cpp \
     src/State.cpp \
-    src/View.cpp
+    src/View.cpp \
+    src/MainWindow.cpp \
+    src/BoardView.cpp
+
+FORMS += \
+    Quoridor.ui

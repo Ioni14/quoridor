@@ -124,6 +124,18 @@ public:
     const int& getNbPlayers() const {
         return m_nbPlayers;
     }
+
+    /**
+     * \brief Affecte le nombre de joueurs du jeu
+     * \param nbPlayers : le nombre de joueurs
+     */
+    void setNbPlayers(const int& nbPlayers) {
+        m_nbPlayers = nbPlayers;
+        if (m_nbPlayers < 0) {
+            m_nbPlayers = 0;
+        }
+    }
+
     /**
      * \brief Retourne l'identification du joueur en train d'être configuré
      * \return l'identification du joueur
@@ -145,6 +157,26 @@ public:
     const int& getBoardSize() const {
         return m_boardSize;
     }
+
+    /**
+     * \brief Affecte la nouvelle taille du plateau
+     * \param boardSize : la nouvelle taille (côté)
+     */
+    void setBoardSize(const int& boardSize) {
+        m_boardSize = boardSize;
+    }
+
+    /**
+     * \brief Ajoute un joueur au jeu (qui sera utilisé lors du lancement de la partie)
+     * \param numero : l'identification du joueur
+     * \param ia : true si le joueur est une IA
+     */
+    void addPlayer(const int& numero, const bool& ia = false);
+
+    /**
+     * \brief Lance la partie (change de State)
+     */
+    void launchGame();
 
 private:
     SUB_STATE m_subState; /**< Sous-menu en cours */
