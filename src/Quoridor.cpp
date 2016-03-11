@@ -50,10 +50,10 @@ State::StatePtr& Quoridor::getState()
 void Quoridor::initialize()
 {
     auto newState = std::make_unique<MainMenuState>(*this);
-    auto newView = std::make_shared<MainMenuView>(*newState);
-    newState->addObserver(newView);
+    //auto newView = std::make_shared<MainMenuView>(*newState);
+    //newState->addObserver(newView);
     setState(std::move(newState));
-    setView(newView);
+    //setView(newView);
     applyNewState();
 }
 
@@ -62,6 +62,7 @@ void Quoridor::reset()
     initialize();
 }
 
+// Utilisé sans fenêtrage
 void Quoridor::run()
 {
     while (m_continue) {

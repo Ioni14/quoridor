@@ -34,15 +34,15 @@ public:
      * \brief Ajoute un observateur à avertir
      * \param observer : l'observateur
      */
-    void addObserver(Observer::ObserverPtr observer);
+    void addObserver(Observer* observer);
     /**
      * \brief Supprime un observateur
      * \param observer : l'observateur
      */
-    void removeObserver(Observer::ObserverPtr observer);
+    void removeObserver(Observer *observer);
 
 protected:
-    std::vector<Observer::ObserverPtr> m_observers; /**< La liste des observateurs à avertir */
+    std::vector<Observer*> m_observers; /**< La liste des observateurs à avertir */
 };
 
 }

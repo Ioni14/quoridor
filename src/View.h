@@ -45,6 +45,8 @@ public:
      */
     virtual void render() = 0;
 
+    virtual void onPlayersInitialized(const std::list<Player>& players);
+
 protected:
     State& m_model; /**< Le modèle que doit afficher la Vue */
 };

@@ -96,12 +96,15 @@ public:
         m_moveChoices.insert(std::make_pair(num, coords));
     }
 
+    void firePlayersInitialized(const std::list<Player>& players);
+
+    void initPlayers();
+
 private:
     void render();
     void update();
     void handleEvents();
 
-    void initPlayers();
     bool hasWon(const Player& player) const;
 
     void makeChoiceAction();

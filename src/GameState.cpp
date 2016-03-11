@@ -29,7 +29,13 @@ GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardS
     m_waitingChoiceWin(false),
     m_waitingChoiceDraw(false)
 {
-    initPlayers();
+}
+
+void GameState::firePlayersInitialized(const std::list<Player>& players)
+{
+    for (auto& observer : m_observers) {
+        observer->onPlayersInitialized(players);
+    }
 }
 
 void GameState::initPlayers()
@@ -65,6 +71,8 @@ void GameState::initPlayers()
         player.setJPos(j);
         m_board.getCells()[i][j].setPlayer(&player);
     }
+
+    firePlayersInitialized(m_players);
 }
 
 void GameState::render()
@@ -180,10 +188,10 @@ void GameState::finishGame()
 {
     // La partie est finie : on revient sur le menu principal
     auto newState = std::make_unique<MainMenuState>(m_app);
-    auto newView = std::make_shared<MainMenuView>(*newState);
-    newState->addObserver(newView);
+    //auto newView = std::make_shared<MainMenuView>(*newState);
+    //newState->addObserver(newView);
     m_app.setState(std::move(newState));
-    m_app.setView(newView);
+    //m_app.setView(newView);
     m_app.applyNewState();
 }
 

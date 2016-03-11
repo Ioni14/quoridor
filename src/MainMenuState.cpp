@@ -172,13 +172,15 @@ void MainMenuState::addPlayer(const int& numero, const bool& ia)
     m_players.push_back(Player(numero, ia));
 }
 
-void MainMenuState::launchGame()
+void MainMenuState::launchGame(Observer* observer)
 {
     auto newState = std::make_unique<GameState>(m_app, std::move(m_players), m_boardSize);
-    auto newView = std::make_shared<GameView>(*newState);
-    newState->addObserver(newView);
+    newState->addObserver(observer);
+    newState->initPlayers();
+    //auto newView = std::make_shared<GameView>(*newState);
+    //newState->addObserver(newView);
     m_app.setState(std::move(newState));
-    m_app.setView(newView);
+    //m_app.setView(newView);
     m_app.applyNewState();
 }
 

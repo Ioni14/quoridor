@@ -32,13 +32,12 @@ void MainWindow::newGame()
     m_model.reset();
     /*
     auto& state = m_model.getState();
-    state->addObserver(*this);
+    state->addObserver(this);
     */
 }
 
 void MainWindow::onNotify()
 {
-    std::cout << "Je suis notifié" << std::endl;
 }
 
 void MainWindow::launchGame()
@@ -109,5 +108,14 @@ void MainWindow::launchGame()
     m_boardView->drawBoard(boardSize);
     m_boardView->show();
     m_ui.mainMenuWidget->hide();
-    state.launchGame();
+    state.launchGame(this); // state n'est plus un MainMenuState
+}
+
+void MainWindow::onPlayersInitialized(const std::list<G36631::Player>& players)
+{
+    if (m_boardView == nullptr) {
+        return;
+    }
+
+    m_boardView->createPlayersItems(players);
 }

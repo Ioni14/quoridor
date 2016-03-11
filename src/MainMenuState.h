@@ -176,7 +176,7 @@ public:
     /**
      * \brief Lance la partie (change de State)
      */
-    void launchGame();
+    void launchGame(Observer *observer = nullptr);
 
 private:
     SUB_STATE m_subState; /**< Sous-menu en cours */

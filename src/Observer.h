@@ -10,6 +10,8 @@
  */
 
 #include <memory>
+#include <list>
+#include "Player.h"
 
 /**
  * \namespace Espace de nom pour les projets de J. Keenens
@@ -36,6 +38,8 @@ public:
      * \brief Appelée lorsque les observables observés sont modifiés
      */
     virtual void onNotify() = 0;
+
+    virtual void onPlayersInitialized(const std::list<Player>& players) = 0;
 };
 
 }

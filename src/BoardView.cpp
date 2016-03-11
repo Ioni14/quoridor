@@ -4,6 +4,9 @@
 #include <QGraphicsPixmapItem>
 #include "MainWindow.h"
 
+const int BoardView::OFFSET_HORIZONTAL = 20;
+const int BoardView::OFFSET_VERTICAL = 20;
+
 BoardView::BoardView(MainWindow& mainWindow, QWidget *parent) :
     QGraphicsView(parent),
     m_scene(this),
@@ -26,33 +29,83 @@ void BoardView::drawBoard(const int& size)
         return;
     }
 
-    int offsetLeft(20), offsetTop(20); // Les bordures autour du plateau
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
             auto& cellTex = itCellTexture->second;
             auto sizeWall  = itWallTexture->second.height();
             QGraphicsPixmapItem *cellSprite = m_scene.addPixmap(cellTex);
             cellSprite->setPos(
-                i * (cellTex.width() + sizeWall) + offsetLeft,
-                j * (cellTex.height() + sizeWall) + offsetTop
+                i * (cellTex.width() + sizeWall) + OFFSET_HORIZONTAL,
+                j * (cellTex.height() + sizeWall) + OFFSET_VERTICAL
             );
         }
     }
 
     // On redimensionne la fenêtre pour qu'elle englobe tout le plateau
     m_mainWindow.resize(
-        size * (itCellTexture->second.width() + itWallTexture->second.height()) + 2*offsetLeft + 15,
-        size * (itCellTexture->second.height() + itWallTexture->second.height()) + 2*offsetTop + 15 + 15
+        size * (itCellTexture->second.width() + itWallTexture->second.height()) + 2*OFFSET_HORIZONTAL + 15,
+        size * (itCellTexture->second.height() + itWallTexture->second.height()) + 2*OFFSET_VERTICAL + 15 + 15
     );
+}
 
+void BoardView::createPlayersItems(const std::list<G36631::Player>& players)
+{
+    auto itCellTexture = m_textures.find(TEXTURES::CELL);
+    auto itWallTexture = m_textures.find(TEXTURES::WALL);
+    auto itPawnBlueTex = m_textures.find(TEXTURES::PAWN_BLUE);
+    auto itPawnRedTex = m_textures.find(TEXTURES::PAWN_RED);
+    auto itPawnGreenTex = m_textures.find(TEXTURES::PAWN_GREEN);
+    auto itPawnYellowTex = m_textures.find(TEXTURES::PAWN_YELLOW);
+    if (itPawnBlueTex == m_textures.end()
+        || itPawnRedTex == m_textures.end()
+        || itPawnGreenTex == m_textures.end()
+        || itPawnYellowTex == m_textures.end()
+        || itCellTexture == m_textures.end()
+        || itWallTexture == m_textures.end()) {
+        return;
+    }
+
+    int cellWidth = itCellTexture->second.width() + itWallTexture->second.height();
+    int cellHeight = itCellTexture->second.height() + itWallTexture->second.height();
+    for (auto& player : players) {
+
+        QPixmap* pawnTex = nullptr;
+        switch (player.getNumero()) {
+            case 1:
+                pawnTex = &(itPawnBlueTex->second);
+                break;
+            case 2:
+                pawnTex = &(itPawnRedTex->second);
+                break;
+            case 3:
+                pawnTex = &(itPawnGreenTex->second);
+                break;
+            case 4:
+                pawnTex = &(itPawnYellowTex->second);
+                break;
+        }
+        if (pawnTex == nullptr) {
+            continue;
+        }
+
+        int cellOffsetX = itCellTexture->second.width() / 2  - pawnTex->width() / 2;
+        int cellOffsetY = itCellTexture->second.height() / 2  - pawnTex->width() / 2;
+
+        QGraphicsPixmapItem *playerSprite = m_scene.addPixmap(*pawnTex);
+        playerSprite->setPos(
+            player.getIPos() * cellWidth + OFFSET_HORIZONTAL + cellOffsetX,
+            player.getJPos() * cellHeight + OFFSET_VERTICAL + cellOffsetY
+        );
+        m_playersItems.insert(std::make_pair(player.getNumero(), playerSprite));
+    }
 
     /*
-     * Afficher la position des joueurs
      * Pour un joueur donné : récup position souris (mouseover) et savoir si on est sur cellule ou entre
      *      => Si clique : soit on le déplace (avec vérifs) soit on place le mur (avec vérifs) : fireMove, fireWall
      *
      * Puis on ajoute les projections pour ERGONOMIE MAGUEULE !!
      */
+
 }
 
 void BoardView::loadTextures()

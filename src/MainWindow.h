@@ -16,6 +16,9 @@ public:
     ~MainWindow();
 
     virtual void onNotify();
+
+    virtual void onPlayersInitialized(const std::list<G36631::Player>& players);
+
 signals:
 
 public slots:

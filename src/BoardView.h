@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <map>
+#include "Player.h"
 
 class MainWindow;
 
@@ -23,6 +24,7 @@ public:
     BoardView(MainWindow& mainWindow, QWidget * parent = 0);
 
     void drawBoard(const int& size);
+    void createPlayersItems(const std::list<G36631::Player> &players);
 
 private:
     /**
@@ -34,7 +36,11 @@ private:
     QGraphicsScene m_scene;
     MainWindow& m_mainWindow;
 
-    std::map<TEXTURES, QPixmap> m_textures;
+    std::map<TEXTURES, QPixmap> m_textures; /**< Liste des textures que le jeu utilise */
+    std::map<int, QGraphicsPixmapItem*> m_playersItems; /**< Liste des sprites des joueurs (clé = numéro des joueurs) */
+
+    static const int OFFSET_HORIZONTAL; /**< La taille de la bordure gauche et droite autour du plateau */
+    static const int OFFSET_VERTICAL; /**< La taille de la bordure haute et basse autour du plateau */
 };
 
 #endif // BOARDVIEW_H
