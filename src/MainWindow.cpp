@@ -12,10 +12,6 @@ MainWindow::MainWindow(G36631::Quoridor &model, QWidget *parent) :
 {
     m_ui.setupUi(this);
     m_ui.gameWidget->hide();
-    m_ui.player1ActualIcon->hide();
-    m_ui.player2ActualIcon->hide();
-    m_ui.player3ActualIcon->hide();
-    m_ui.player4ActualIcon->hide();
 
     connect(m_ui.actionNouvelle_partie, SIGNAL(triggered(bool)),
             this, SLOT(newGame()));
@@ -25,9 +21,13 @@ MainWindow::MainWindow(G36631::Quoridor &model, QWidget *parent) :
             this, SLOT(about()));
     connect(m_ui.actionComment_jouer, SIGNAL(triggered(bool)),
             this, SLOT(howToPlay()));
-
     connect(m_ui.launchGameButton, SIGNAL(clicked(bool)),
             this, SLOT(launchGame()));
+
+    if (!m_caretTexture.load("./res/caret.png")) {
+        std::cerr << "./res/caret.png introuvable" << std::endl;
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +54,7 @@ void MainWindow::howToPlay()
 void MainWindow::about()
 {
     QString message;
-    message += "Quoridor réalisé par J. Keenens\n\n";
+    message += "Quoridor réalisé par J. Keenens - 2016\n\n";
     message += "Jeu de stratégie créé par Mirko Marchesi en 1997.";
     QMessageBox::information(this, "A propos", message);
 }
@@ -208,23 +208,23 @@ void MainWindow::updateDashboard()
     auto& state = dynamic_cast<G36631::GameState&>(stateBase);
 
     // On met à jour le dashboard
-    m_ui.player1ActualIcon->hide();
-    m_ui.player2ActualIcon->hide();
-    m_ui.player3ActualIcon->hide();
-    m_ui.player4ActualIcon->hide();
+    m_ui.player1ActualIcon->clear();
+    m_ui.player2ActualIcon->clear();
+    m_ui.player3ActualIcon->clear();
+    m_ui.player4ActualIcon->clear();
     auto& playerActualNumero = state.getPlayerActual().getNumero();
     switch (playerActualNumero) {
         case 1:
-            m_ui.player1ActualIcon->show();
+            m_ui.player1ActualIcon->setPixmap(m_caretTexture);
             break;
         case 2:
-            m_ui.player2ActualIcon->show();
+            m_ui.player2ActualIcon->setPixmap(m_caretTexture);
             break;
         case 3:
-            m_ui.player3ActualIcon->show();
+            m_ui.player3ActualIcon->setPixmap(m_caretTexture);
             break;
         case 4:
-            m_ui.player4ActualIcon->show();
+            m_ui.player4ActualIcon->setPixmap(m_caretTexture);
             break;
     }
 

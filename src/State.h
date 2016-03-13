@@ -40,19 +40,6 @@ public:
     virtual ~State() = default;
 
     /**
-     * \brief Procède à l'affichage du jeu
-     */
-    virtual void render() = 0;
-    /**
-     * \brief Procède à la mise-à-jour du modèle du jeu
-     */
-    virtual void update() = 0;
-    /**
-     * \brief Procède à lecture des entrées utilisateurs
-     */
-    virtual void handleEvents() = 0;
-
-    /**
      * \brief Avertit les observateurs d'une mise-à-jour de l'état du jeu
      */
     void notifyObservers();

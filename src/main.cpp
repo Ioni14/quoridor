@@ -8,5 +8,7 @@ int main(int argc, char *argv[])
     auto model = G36631::Quoridor();
     MainWindow *widget = new MainWindow(model);
     widget->show();
-    return app.exec();
+    int ret = app.exec();
+    delete widget;
+    return ret;
 }

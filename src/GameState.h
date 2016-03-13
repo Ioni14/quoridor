@@ -29,18 +29,6 @@ namespace G36631 {
 class GameState : public State
 {
 public:
-    enum class SUB_STATE {
-        LOADING, /**< Chargement du jeu */
-        ACTION, /**< Demande de l'action à effectuer pour le joueur */
-        MOVE, /**< Demande du déplacement du joueur */
-        WALL_COL, /**< Demande de la colonne du mur */
-        WALL_ROW, /**< Demande de la ligne du mur */
-        WALL_DIR, /**< Demande de la direction du mur */
-        WIN, /**< Gagnant de la partie */
-        DRAW /**< Partie nulle */
-    };
-
-public:
     /**
      * \brief Constructeur logique
      * \param app : référence sur la classe principale du jeu
@@ -48,37 +36,6 @@ public:
      * \param boardSize : la taille du plateau
      */
     GameState(Quoridor& app, std::list<Player> players, const int &boardSize);
-
-    const SUB_STATE& getSubState() const {
-        return m_subState;
-    }
-    std::string getError() const {
-        return m_error.str();
-    }
-    void setWaitingChoiceEnded(const bool& val) {
-        m_loadingEnded = val;
-    }
-    void setWaitingChoiceAction(const bool& val) {
-        m_waitingChoiceAction = val;
-    }
-    void setWaitingChoiceMove(const bool& val) {
-        m_waitingChoiceMove = val;
-    }
-    void setWaitingChoiceWallCol(const bool& val) {
-        m_waitingChoiceWallCol = val;
-    }
-    void setWaitingChoiceWallRow(const bool& val) {
-        m_waitingChoiceWallRow = val;
-    }
-    void setWaitingChoiceWallDir(const bool& val) {
-        m_waitingChoiceWallDir = val;
-    }
-    void setWaitingChoiceWin(const bool& val) {
-        m_waitingChoiceWin = val;
-    }
-    void setWaitingChoiceDraw(const bool& val) {
-        m_waitingChoiceDraw = val;
-    }
 
     const Board& getBoard() const {
         return m_board;
@@ -95,9 +52,6 @@ public:
     const std::list<Player>& getPlayers() const {
         return m_players;
     }
-    void addMoveChoice(const int& num, std::vector<int> coords) {
-        m_moveChoices.insert(std::make_pair(num, coords));
-    }
 
     void firePlayersInitialized(const std::list<Player>& players);
     void firePlayerMove(const Player& player);
@@ -112,41 +66,15 @@ public:
     void nextPlayer();
 
 private:
-    void render();
-    void update();
-    void handleEvents();
-
     bool hasWon(const Player& player) const;
-
-    void makeChoiceAction();
-    void makeChoiceMove();
-    void makeChoiceWallCol();
-    void makeChoiceWallRow();
-    void makeChoiceWallDir();
     void finishGame();
 
 private:
-    SUB_STATE m_subState;
-
     Board m_board;
     std::list<Player> m_players;
     int m_nbPlayers;
     int m_nbWallsAtStart;
     int m_playerActual;
-    int m_wallCol;
-    int m_wallRow;
-    Board::WALL_ORIENTATION m_wallDir;
-    std::map<int, std::vector<int>> m_moveChoices; /**< Les choix possibles pour le déplacement du joueur actuel */
-
-    std::ostringstream m_error;
-    bool m_loadingEnded;
-    bool m_waitingChoiceAction;
-    bool m_waitingChoiceMove;
-    bool m_waitingChoiceWallCol;
-    bool m_waitingChoiceWallRow;
-    bool m_waitingChoiceWallDir;
-    bool m_waitingChoiceWin;
-    bool m_waitingChoiceDraw;
 };
 
 }

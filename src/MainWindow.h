@@ -43,6 +43,8 @@ private:
     BoardView* m_boardView;
 
     G36631::Quoridor &m_model;
+
+    QPixmap m_caretTexture;
 };
 
 #endif // MAINWINDOW_H

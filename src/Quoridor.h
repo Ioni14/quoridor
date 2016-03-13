@@ -10,7 +10,6 @@
  */
 
 #include "State.h"
-#include "MainMenuView.h"
 
 /**
  * \namespace Espace de nom pour les projets de J. Keenens
@@ -30,15 +29,6 @@ public:
     Quoridor();
 
     /**
-     * \brief Lance la boucle événementielle du jeu
-     */
-    void run();
-    /**
-     * \brief Quitte le jeu
-     */
-    void quit();
-
-    /**
      * \brief Prévois un changement d'état du jeu
      * \param newState : le prochain état
      */
@@ -49,12 +39,6 @@ public:
      * \return l'état du jeu
      */
     State::StatePtr& getState();
-
-    /**
-     * \brief Change la vue actuelle du jeu
-     * \param newView : la nouvelle vue
-     */
-    void setView(View::ViewPtr newView);
 
     /**
      * \brief Applique les changements du nouvel état
@@ -75,9 +59,6 @@ private:
 private:
     State::StatePtr m_state; /**< L'état courant du jeu (menu, en jeu...) */
     State::StatePtr m_newState; /**< Le prochain état du jeu */
-    View::ViewPtr m_view; /**< La vue actuelle du jeu (affichage du menu...) */
-
-    bool m_continue; /**< Flag qui permet l'exécution en continue du jeu */
 };
 
 }

@@ -7,16 +7,9 @@ namespace G36631 {
 
 Quoridor::Quoridor() :
     m_state(nullptr),
-    m_newState(nullptr),
-    m_view(nullptr),
-    m_continue(true)
+    m_newState(nullptr)
 {
     initialize();
-}
-
-void Quoridor::quit()
-{
-    m_continue = false;
 }
 
 /**
@@ -39,11 +32,6 @@ void Quoridor::setState(State::StatePtr newState)
     m_newState = std::move(newState);
 }
 
-void Quoridor::setView(View::ViewPtr newView)
-{
-    m_view = newView;
-}
-
 State::StatePtr& Quoridor::getState()
 {
     return m_state;
@@ -52,26 +40,13 @@ State::StatePtr& Quoridor::getState()
 void Quoridor::initialize()
 {
     auto newState = std::make_unique<MainMenuState>(*this);
-    //auto newView = std::make_shared<MainMenuView>(*newState);
-    //newState->addObserver(newView);
     setState(std::move(newState));
-    //setView(newView);
     applyNewState();
 }
 
 void Quoridor::reset()
 {
     initialize();
-}
-
-// Utilisé sans fenêtrage
-void Quoridor::run()
-{
-    while (m_continue) {
-        m_state->handleEvents();
-        m_state->update();
-        m_state->render();
-    }
 }
 
 }

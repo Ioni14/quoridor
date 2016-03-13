@@ -149,11 +149,6 @@ void BoardView::mousePressEvent(QMouseEvent * e)
 
     // Bouton droite
     doMouseEvent(e->pos(), false);
-
-   /*
-    * Faire à la main le caret Pixmap (label.setPixmap();)
-    * Match nul
-    */
 }
 
 void BoardView::keyPressEvent(QKeyEvent* e)
