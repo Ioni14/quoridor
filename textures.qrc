@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/board-cell.png</file>
+        <file>res/caret.png</file>
+        <file>res/pawn-blue-24.png</file>
+        <file>res/pawn-blue-24-alpha.png</file>
+        <file>res/pawn-green-24.png</file>
+        <file>res/pawn-green-24-alpha.png</file>
+        <file>res/pawn-red-24.png</file>
+        <file>res/pawn-red-24-alpha.png</file>
+        <file>res/pawn-yellow-24.png</file>
+        <file>res/pawn-yellow-24-alpha.png</file>
+        <file>res/wall.png</file>
+        <file>res/wall-projection.png</file>
+    </qresource>
+</RCC>

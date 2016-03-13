@@ -375,77 +375,77 @@ void BoardView::loadTextures()
 {
     {
         QPixmap tex;
-        if (!tex.load("./res/board-cell.png")) {
+        if (!tex.load(":/res/board-cell.png")) {
             std::cerr << "./res/board-cell.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::CELL, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-blue-24.png")) {
+        if (!tex.load(":/res/pawn-blue-24.png")) {
             std::cerr << "./res/pawn-blue-24.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_BLUE, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-blue-24-alpha.png")) {
+        if (!tex.load(":/res/pawn-blue-24-alpha.png")) {
             std::cerr << "./res/pawn-blue-24-alpha.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_BLUE_PROJ, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-red-24.png")) {
+        if (!tex.load(":/res/pawn-red-24.png")) {
             std::cerr << "./res/pawn-red-24.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_RED, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-red-24-alpha.png")) {
+        if (!tex.load(":/res/pawn-red-24-alpha.png")) {
             std::cerr << "./res/pawn-red-24-alpha.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_RED_PROJ, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-yellow-24.png")) {
+        if (!tex.load(":/res/pawn-yellow-24.png")) {
             std::cerr << "./res/pawn-yellow-24.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_YELLOW, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-yellow-24-alpha.png")) {
+        if (!tex.load(":/res/pawn-yellow-24-alpha.png")) {
             std::cerr << "./res/pawn-yellow-24-alpha.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_YELLOW_PROJ, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-green-24.png")) {
+        if (!tex.load(":/res/pawn-green-24.png")) {
             std::cerr << "./res/pawn-green-24.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_GREEN, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/pawn-green-24-alpha.png")) {
+        if (!tex.load(":/res/pawn-green-24-alpha.png")) {
             std::cerr << "./res/pawn-green-24-alpha.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::PAWN_GREEN_PROJ, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/wall.png")) {
+        if (!tex.load(":/res/wall.png")) {
             std::cerr << "./res/wall.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::WALL, std::move(tex)));
     }
     {
         QPixmap tex;
-        if (!tex.load("./res/wall-projection.png")) {
+        if (!tex.load(":/res/wall-projection.png")) {
             std::cerr << "./res/wall-projection.png introuvable" << std::endl;
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::WALL_PROJECTION, std::move(tex)));

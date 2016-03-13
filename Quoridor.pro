@@ -39,3 +39,6 @@ SOURCES += \
 
 FORMS += \
     Quoridor.ui
+
+RESOURCES += \
+    textures.qrc

@@ -24,7 +24,7 @@ MainWindow::MainWindow(G36631::Quoridor &model, QWidget *parent) :
     connect(m_ui.launchGameButton, SIGNAL(clicked(bool)),
             this, SLOT(launchGame()));
 
-    if (!m_caretTexture.load("./res/caret.png")) {
+    if (!m_caretTexture.load(":/res/caret.png")) {
         std::cerr << "./res/caret.png introuvable" << std::endl;
     }
 
