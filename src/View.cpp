@@ -12,8 +12,4 @@ void View::onNotify()
     render();
 }
 
-void View::onPlayersInitialized(const std::list<Player>& players)
-{
-}
-
 }

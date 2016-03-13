@@ -30,4 +30,11 @@ int State::promptInteger()
     return choice;
 }
 
+void State::fireActivated()
+{
+    for (auto& observer : m_observers) {
+        observer->onActivated();
+    }
+}
+
 }

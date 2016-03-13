@@ -103,6 +103,13 @@ public:
         return m_nbWalls > 0;
     }
     /**
+     * \brief Récupère le nombre de murs que possède le joueur
+     * \return le nombre de mur
+     */
+    const int& getNbWalls() const {
+        return m_nbWalls;
+    }
+    /**
      * \brief Affecte un nombre de mur au joueur
      * \param walls : le nombre de murs à donner au joueur
      */

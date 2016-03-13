@@ -30,6 +30,8 @@ void Quoridor::applyNewState()
     }
     m_state = std::move(m_newState);
     m_newState = nullptr;
+
+    m_state->fireActivated();
 }
 
 void Quoridor::setState(State::StatePtr newState)

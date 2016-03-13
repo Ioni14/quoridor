@@ -12,6 +12,7 @@
 #include <memory>
 #include <list>
 #include "Player.h"
+#include "Board.h"
 
 /**
  * \namespace Espace de nom pour les projets de J. Keenens
@@ -38,8 +39,12 @@ public:
      * \brief Appelée lorsque les observables observés sont modifiés
      */
     virtual void onNotify() = 0;
+    virtual void onActivated() = 0;
 
     virtual void onPlayersInitialized(const std::list<Player>& players) = 0;
+    virtual void onPlayerMove(const Player& player) = 0;
+    virtual void onPutWall(const int& i, const int& j, const Board::WALL_ORIENTATION& orientation) = 0;
+    virtual void onPlayerWon(const Player& player) = 0;
 };
 
 }

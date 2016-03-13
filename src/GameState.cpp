@@ -38,6 +38,27 @@ void GameState::firePlayersInitialized(const std::list<Player>& players)
     }
 }
 
+void GameState::firePlayerMove(const Player& player)
+{
+    for (auto& observer : m_observers) {
+        observer->onPlayerMove(player);
+    }
+}
+
+void GameState::firePlayerWon(const Player& player)
+{
+    for (auto& observer : m_observers) {
+        observer->onPlayerWon(player);
+    }
+}
+
+void GameState::firePutWall(const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+{
+    for (auto& observer : m_observers) {
+        observer->onPutWall(i, j, orientation);
+    }
+}
+
 void GameState::initPlayers()
 {
     auto size = m_board.getSize();
@@ -73,6 +94,11 @@ void GameState::initPlayers()
     }
 
     firePlayersInitialized(m_players);
+}
+
+void GameState::nextPlayer()
+{
+    m_playerActual = m_playerActual % m_nbPlayers + 1;
 }
 
 void GameState::render()
@@ -125,7 +151,7 @@ void GameState::makeChoiceMove()
     if (itMoveChoice == m_moveChoices.end()) {
         m_error << "Veuillez taper un nombre entre 0 et " << m_moveChoices.size() << " compris.";
     } else {
-        playerActual.move(m_board, itMoveChoice->second[0], itMoveChoice->second[1]);
+        movePlayer(playerActual, itMoveChoice->second[0], itMoveChoice->second[1]);
     }
 
     // Check si un joueur a gagné
@@ -133,7 +159,7 @@ void GameState::makeChoiceMove()
         m_subState = SUB_STATE::WIN;
         return;
     }
-    m_playerActual = m_playerActual % m_nbPlayers + 1;
+    nextPlayer();
     m_subState = SUB_STATE::ACTION;
 }
 
@@ -174,9 +200,9 @@ void GameState::makeChoiceWallDir()
             m_error << "Veuillez taper 1 ou 2.";
     }
     if (choice == 1 || choice == 2) {
-        auto isPut = m_board.putWall(m_players, getPlayerActual(), m_wallCol, m_wallRow, m_wallDir);
+        auto isPut = putWall(getPlayerActual(), m_wallCol, m_wallRow, m_wallDir);
         if (isPut) {
-            m_playerActual = m_playerActual % m_nbPlayers + 1;
+            nextPlayer();
         } else {
             m_error << "Ce mur ne peut etre positionne a cet endroit.";
         }
@@ -228,6 +254,30 @@ bool GameState::hasWon(const Player& player) const
             || (player.getNumero() == 2 && player.getJPos() == m_board.getSize() - 1)
             || (player.getNumero() == 3 && player.getIPos() == 0)
             || (player.getNumero() == 4 && player.getIPos() == m_board.getSize() - 1));
+}
+
+void GameState::movePlayer(Player& player, const int& di, const int& dj)
+{
+    player.move(m_board, di, dj);
+    firePlayerMove(player);
+
+    if (hasWon(player)) {
+        firePlayerWon(player);
+    }
+}
+
+bool GameState::canPutWall(Player& player, const int &i, const int &j, const Board::WALL_ORIENTATION &orientation)
+{
+    return m_board.canPutWall(m_players, player, i, j, orientation);
+}
+
+bool GameState::putWall(Player &player, const int &i, const int &j, const Board::WALL_ORIENTATION &orientation)
+{
+    if (m_board.putWall(m_players, player, i, j, orientation)) {
+        firePutWall(i, j, orientation);
+        return true;
+    }
+    return false;
 }
 
 }

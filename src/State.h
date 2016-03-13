@@ -63,6 +63,11 @@ public:
      */
     static int promptInteger();
 
+    /**
+     * \brief Avertit les observateurs que l'état a été activé par le gestionnaire
+     */
+    void fireActivated();
+
 protected:
     Quoridor& m_app; /**< Référence sur la classe principale du jeu */
 };

@@ -44,6 +44,7 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
     if (di == 0 && dj == -1 && cells[m_iPos][m_jPos].hasWallNorth()) { // mur Nord
         return false;
     }
+
     if (di == 0 && dj == 1 && cells[m_iPos][m_jPos].hasWallSouth()) { // mur Sud
         return false;
     }
@@ -82,7 +83,7 @@ bool Player::canMove(const Board& board, const int& di, const int& dj) const
     }
 
     // On peut aller tout droit si on veut
-    if (di == 0 || dj == 0) {
+    if ((di == 0 && std::abs(dj) <= 2) || (dj == 0 && std::abs(di) <= 2)) {
         return true;
     }
 

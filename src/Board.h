@@ -44,7 +44,7 @@ public:
     std::vector<std::vector<BoardCell>>& getCells();
     const std::vector<std::vector<BoardCell>>& getCells() const;
     /**
-     * \brief Construit un mur à l'emplacement indiqué par le joueur indiqué
+     * \brief Construit un mur en bas à droite de l'emplacement indiqué par le joueur indiqué
      * \param players : la liste des joueurs
      * \param player : le joueur qui veut mettre le mur
      * \param i : la colonne de la cellule visée
@@ -55,13 +55,14 @@ public:
     bool putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
     /**
      * \brief Indique si le joueur indiqué peut mettre un mur à l'emplacement indiqué
+     * \param players : la liste des joueurs
      * \param player : le joueur qui veut mettre le mur
      * \param i : la colonne de la cellule visée
      * \param j : la ligne de la cellule visée
      * \param orientation : l'orientation du mur (vertical, horizontal)
      * \return true si le mur peut être construit
      */
-    bool canPutWall(const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation) const;
+    bool canPutWall(const std::list<Player>& players, const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
     /**
      * \brief Indique si tous les joueurs ont un chemin jusqu'à leur arrivée
      * \param players : la liste des joueurs

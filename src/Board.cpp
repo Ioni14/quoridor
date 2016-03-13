@@ -49,18 +49,9 @@ void Board::putBorderWalls(const int& i, const int& j)
     }
 }
 
-/**
- * @brief Board::putWall Ajoute un mur sur le plateau
- * @param players La liste des joueurs
- * @param player Le joueur actif
- * @param i La colonne de la cellule visée
- * @param j La ligne de la cellule visée
- * @param orientation L'orientation du mur à poser
- * @return true si le mur a été posé
- */
 bool Board::putWall(const std::list<Player>& players, Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
-    if (!canPutWall(player, i, j, orientation)) {
+    if (!canPutWall(players, player, i, j, orientation)) {
         return false;
     }
 
@@ -76,28 +67,12 @@ bool Board::putWall(const std::list<Player>& players, Player& player, const int&
         m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
     }
 
-    if (!havePaths(players)) {
-        // Pas de chemin pour les joueurs : on enlève les murs
-        if (orientation == WALL_ORIENTATION::VERTICAL) {
-            m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::NONE);
-            m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::NONE);
-            m_cells[i + 1][j].setWallWest(BoardCell::WALL_POSITION::NONE);
-            m_cells[i + 1][j + 1].setWallWest(BoardCell::WALL_POSITION::NONE);
-        } else {
-            m_cells[i][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
-            m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
-            m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
-            m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
-        }
-        return false;
-    }
-
     player.decrementWalls();
     return true;
 }
 
 // Le mur se met en bas à droite de la cellule visée
-bool Board::canPutWall(const Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation) const
+bool Board::canPutWall(const std::list<Player>& players, const Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
     if (!player.hasWalls()) {
         return false;
@@ -125,7 +100,35 @@ bool Board::canPutWall(const Player& player, const int& i, const int& j, const B
         }
     }
 
-    return true;
+    // On prépare le terrain pour calculer un chemin
+    if (orientation == WALL_ORIENTATION::VERTICAL) {
+        m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::DOWN_RIGHT);
+        m_cells[i + 1][j].setWallWest(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i + 1][j + 1].setWallWest(BoardCell::WALL_POSITION::DOWN_RIGHT);
+    } else {
+        m_cells[i][j].setWallSouth(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::DOWN_RIGHT);
+        m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::UP_LEFT);
+        m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
+    }
+
+    bool pathsFound = havePaths(players);
+
+    // On remet les chemins comme avant
+    if (orientation == WALL_ORIENTATION::VERTICAL) {
+        m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::NONE);
+        m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j].setWallWest(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j + 1].setWallWest(BoardCell::WALL_POSITION::NONE);
+    } else {
+        m_cells[i][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+    }
+
+    return pathsFound;
 }
 
 bool Board::havePaths(const std::list<Player>& players) const
