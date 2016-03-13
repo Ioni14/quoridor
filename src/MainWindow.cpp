@@ -5,6 +5,8 @@
 #include "MainMenuState.h"
 #include "GameState.h"
 
+namespace G36631 {
+
 MainWindow::MainWindow(G36631::Quoridor &model, QWidget *parent) :
     QMainWindow(parent),
     m_boardView(nullptr),
@@ -73,10 +75,6 @@ void MainWindow::newGame()
     }
     m_ui.gameWidget->hide();
     m_ui.mainMenuWidget->show();
-}
-
-void MainWindow::onNotify()
-{
 }
 
 void MainWindow::launchGame()
@@ -246,4 +244,6 @@ void MainWindow::updateDashboard()
                 break;
         }
     }
+}
+
 }

@@ -5,8 +5,8 @@
  * \file MainMenuState.h
  * \brief Définition de la classe MainMenuState
  * \author J. Keenens
- * \version 0.1
- * \date 07/03/2016
+ * \version 0.2
+ * \date 13/03/2016
  */
 
 #include <list>
@@ -90,6 +90,7 @@ public:
 
     /**
      * \brief Lance la partie (change de State)
+     * \param observer : un observateur qui sera notifié du lancement de la partie
      */
     void launchGame(Observer *observer = nullptr);
 

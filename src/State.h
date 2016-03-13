@@ -40,11 +40,6 @@ public:
     virtual ~State() = default;
 
     /**
-     * \brief Avertit les observateurs d'une mise-à-jour de l'état du jeu
-     */
-    void notifyObservers();
-
-    /**
      * \brief Lit l'entrée standard
      * \return Le nombre entier écrit sinon -1
      */

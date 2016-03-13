@@ -17,7 +17,6 @@ HEADERS += \
     src/Player.h \
     src/Quoridor.h \
     src/State.h \
-    src/View.h \
     src/MainWindow.h \
     src/BoardView.h
 

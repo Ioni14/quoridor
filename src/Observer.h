@@ -5,8 +5,8 @@
  * \file Observer.h
  * \brief Définition de la classe Observer
  * \author J. Keenens
- * \version 0.1
- * \date 07/03/2016
+ * \version 0.2
+ * \date 13/03/2016
  */
 
 #include <memory>
@@ -35,15 +35,35 @@ public:
      * \brief Destructeur généré par le compilateur
      */
     virtual ~Observer() = default;
+
     /**
-     * \brief Appelée lorsque les observables observés sont modifiés
+     * \brief Appelé lorsque l'observateur a été activé par la classe principale Quoridor
      */
-    virtual void onNotify() = 0;
     virtual void onActivated() = 0;
 
+    /**
+     * \brief Appelé lorsque les joueurs ont été créés et positionnés sur leur case de départ
+     * \param players : les joueurs initialisés
+     */
     virtual void onPlayersInitialized(const std::list<Player>& players) = 0;
+    /**
+     * \brief Appelé lorsque qu'un joueur s'est déplacé sur le plateau
+     * \param player : le joueur concerné
+     */
     virtual void onPlayerMove(const Player& player) = 0;
+
+    /**
+     * \brief Appelé lorsque qu'un mur a été construit sur le plateau
+     * \param i : la colonne du mur
+     * \param j : la ligne du mur
+     * \param orientation : l'orientation du mur
+     */
     virtual void onPutWall(const int& i, const int& j, const Board::WALL_ORIENTATION& orientation) = 0;
+
+    /**
+     * \brief Appelé lorsqu'un joueur a gagné la partie
+     * \param player : le joueur concerné
+     */
     virtual void onPlayerWon(const Player& player) = 0;
 };
 

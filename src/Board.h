@@ -5,8 +5,8 @@
  * \file Board.h
  * \brief Définition de la classe Board
  * \author J. Keenens
- * \version 0.1
- * \date 07/03/2016
+ * \version 0.2
+ * \date 13/03/2016
  */
 
 #include <vector>
@@ -41,7 +41,15 @@ public:
      */
     Board(const int& size);
 
+    /**
+     * \brief Récupère les cases du plateau
+     * \return tableau 2D des cases
+     */
     std::vector<std::vector<BoardCell>>& getCells();
+    /**
+     * \brief Récupère les cases du plateau
+     * \return tableau 2D des cases en lecture seule
+     */
     const std::vector<std::vector<BoardCell>>& getCells() const;
     /**
      * \brief Construit un mur en bas à droite de l'emplacement indiqué par le joueur indiqué
@@ -70,6 +78,10 @@ public:
      */
     bool havePaths(const std::list<Player> &players) const;
 
+    /**
+     * \brief Récupère la taille du plateau
+     * \return la taille du plateau
+     */
     const int& getSize() const {
         return m_size;
     }
@@ -83,6 +95,10 @@ public:
     }
 
 private:
+    /**
+     * \brief Crée et ajoute les cases du plateau
+     * ainsi que les murs aux bords
+     */
     void create();
     /**
      * \brief Ajoute les murs aux bords du plateau

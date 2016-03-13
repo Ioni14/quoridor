@@ -41,24 +41,84 @@ public:
      */
     BoardCell(const int& i, const int& j);
 
+    /**
+     * \brief Récupère le type du mur nord
+     * \return le type du mur nord
+     */
     const WALL_POSITION& getWallNorth() const;
+    /**
+     * \brief Indique si la case a un mur nord
+     * \return true si la case a un mur nord
+     */
     bool hasWallNorth() const;
+    /**
+     * \brief Affecte un nouveau type au mur nord
+     * \param val : le nouveau type
+     */
     void setWallNorth(const WALL_POSITION& val);
 
+    /**
+     * \brief Récupère le type du mur sud
+     * \return le type du mur sud
+     */
     const WALL_POSITION& getWallSouth() const;
+    /**
+     * \brief Indique si la case a un mur sud
+     * \return true si la case a un mur sud
+     */
     bool hasWallSouth() const;
+    /**
+     * \brief Affecte un nouveau type au mur sud
+     * \param val : le nouveau type
+     */
     void setWallSouth(const WALL_POSITION& val);
 
+    /**
+     * \brief Récupère le type du mur est
+     * \return le type du mur est
+     */
     const WALL_POSITION& getWallEast() const;
+    /**
+     * \brief Indique si la case a un mur est
+     * \return true si la case a un mur est
+     */
     bool hasWallEast() const;
+    /**
+     * \brief Affecte un nouveau type au mur est
+     * \param val : le nouveau type
+     */
     void setWallEast(const WALL_POSITION& val);
 
+    /**
+     * \brief Récupère le type du mur ouest
+     * \return le type du mur ouest
+     */
     const WALL_POSITION& getWallWest() const;
+    /**
+     * \brief Indique si la case a un mur ouest
+     * \return true si la case a un mur ouest
+     */
     bool hasWallWest() const;
+    /**
+     * \brief Affecte un nouveau type au mur ouest
+     * \param val : le nouveau type
+     */
     void setWallWest(const WALL_POSITION& val);
 
+    /**
+     * \brief Récupère le joueur qui se trouve sur la case
+     * \return le joueur ou nullptr s'il n'y a personne
+     */
     const Player* getPlayer() const;
+    /**
+     * \brief Indique s'il y a un joueur sur la case
+     * \return true s'il y a un joueur
+     */
     bool hasPlayer() const;
+    /**
+     * \brief Affecte un joueur sur la case
+     * \param player : le joueur qui doit se trouver sur la case
+     */
     void setPlayer(const Player* player);
 
     /**

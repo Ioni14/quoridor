@@ -5,6 +5,8 @@
 #include "MainWindow.h"
 #include "GameState.h"
 
+namespace G36631 {
+
 const int BoardView::OFFSET_HORIZONTAL = 20;
 const int BoardView::OFFSET_VERTICAL = 20;
 
@@ -265,14 +267,14 @@ void BoardView::createWallProjectionItem(const int& i, const int& j, const G3663
     }
 }
 
-void BoardView::createPlayerProjectionItem(const G36631::Player& player, const int& i, const int& j)
+void BoardView::createPlayerItem(const G36631::Player& player, const int& i, const int& j, const bool& projection)
 {
     auto itCellTexture = m_textures.find(TEXTURES::CELL);
     auto itWallTexture = m_textures.find(TEXTURES::WALL);
-    auto itPawnBlueTex = m_textures.find(TEXTURES::PAWN_BLUE_PROJ);
-    auto itPawnRedTex = m_textures.find(TEXTURES::PAWN_RED_PROJ);
-    auto itPawnGreenTex = m_textures.find(TEXTURES::PAWN_GREEN_PROJ);
-    auto itPawnYellowTex = m_textures.find(TEXTURES::PAWN_YELLOW_PROJ);
+    auto itPawnBlueTex = projection ? m_textures.find(TEXTURES::PAWN_BLUE_PROJ) : m_textures.find(TEXTURES::PAWN_BLUE);
+    auto itPawnRedTex = projection ? m_textures.find(TEXTURES::PAWN_RED_PROJ) : m_textures.find(TEXTURES::PAWN_RED);
+    auto itPawnGreenTex = projection ? m_textures.find(TEXTURES::PAWN_GREEN_PROJ) : m_textures.find(TEXTURES::PAWN_GREEN);
+    auto itPawnYellowTex = projection ? m_textures.find(TEXTURES::PAWN_YELLOW_PROJ) : m_textures.find(TEXTURES::PAWN_YELLOW);
     if (itPawnBlueTex == m_textures.end()
         || itPawnRedTex == m_textures.end()
         || itPawnGreenTex == m_textures.end()
@@ -307,68 +309,35 @@ void BoardView::createPlayerProjectionItem(const G36631::Player& player, const i
     int cellOffsetX = itCellTexture->second.width() / 2  - pawnTex->width() / 2;
     int cellOffsetY = itCellTexture->second.height() / 2  - pawnTex->width() / 2;
 
-    m_projectionItem = m_scene.addPixmap(*pawnTex);
-    m_projectionItem->setOffset(cellOffsetX, cellOffsetY);
-    m_projectionItem->setPos(
-        i * cellWidth + OFFSET_HORIZONTAL,
-        j * cellHeight + OFFSET_VERTICAL
-    );
+    if (projection) {
+        m_projectionItem = m_scene.addPixmap(*pawnTex);
+        m_projectionItem->setOffset(cellOffsetX, cellOffsetY);
+        m_projectionItem->setPos(
+            i * cellWidth + OFFSET_HORIZONTAL,
+            j * cellHeight + OFFSET_VERTICAL
+        );
+    } else {
+        QGraphicsPixmapItem *playerSprite = m_scene.addPixmap(*pawnTex);
+        playerSprite->setOffset(cellOffsetX, cellOffsetY);
+        playerSprite->setPos(
+            i * cellWidth + OFFSET_HORIZONTAL,
+            j * cellHeight + OFFSET_VERTICAL
+        );
+        m_playersItems.insert(std::make_pair(player.getNumero(), playerSprite));
+    }
 
+}
+
+void BoardView::createPlayerProjectionItem(const G36631::Player& player, const int& i, const int& j)
+{
+    createPlayerItem(player, i, j, true);
 }
 
 void BoardView::createPlayersItems(const std::list<G36631::Player>& players)
 {
-    auto itCellTexture = m_textures.find(TEXTURES::CELL);
-    auto itWallTexture = m_textures.find(TEXTURES::WALL);
-    auto itPawnBlueTex = m_textures.find(TEXTURES::PAWN_BLUE);
-    auto itPawnRedTex = m_textures.find(TEXTURES::PAWN_RED);
-    auto itPawnGreenTex = m_textures.find(TEXTURES::PAWN_GREEN);
-    auto itPawnYellowTex = m_textures.find(TEXTURES::PAWN_YELLOW);
-    if (itPawnBlueTex == m_textures.end()
-        || itPawnRedTex == m_textures.end()
-        || itPawnGreenTex == m_textures.end()
-        || itPawnYellowTex == m_textures.end()
-        || itCellTexture == m_textures.end()
-        || itWallTexture == m_textures.end()) {
-        return;
-    }
-
-    int cellWidth = itCellTexture->second.width() + itWallTexture->second.height();
-    int cellHeight = itCellTexture->second.height() + itWallTexture->second.height();
     for (auto& player : players) {
-
-        QPixmap* pawnTex = nullptr;
-        switch (player.getNumero()) {
-            case 1:
-                pawnTex = &(itPawnBlueTex->second);
-                break;
-            case 2:
-                pawnTex = &(itPawnRedTex->second);
-                break;
-            case 3:
-                pawnTex = &(itPawnGreenTex->second);
-                break;
-            case 4:
-                pawnTex = &(itPawnYellowTex->second);
-                break;
-        }
-        if (pawnTex == nullptr) {
-            continue;
-        }
-
-        int cellOffsetX = itCellTexture->second.width() / 2  - pawnTex->width() / 2;
-        int cellOffsetY = itCellTexture->second.height() / 2  - pawnTex->width() / 2;
-
-        QGraphicsPixmapItem *playerSprite = m_scene.addPixmap(*pawnTex);
-        playerSprite->setOffset(cellOffsetX, cellOffsetY);
-        playerSprite->setPos(
-            player.getIPos() * cellWidth + OFFSET_HORIZONTAL,
-            player.getJPos() * cellHeight + OFFSET_VERTICAL
-        );
-        m_playersItems.insert(std::make_pair(player.getNumero(), playerSprite));
-
+        createPlayerItem(player, player.getIPos(), player.getJPos(), false);
     }
-
 }
 
 void BoardView::loadTextures()
@@ -450,4 +419,6 @@ void BoardView::loadTextures()
         }
         m_textures.insert(std::make_pair<TEXTURES, QPixmap>(TEXTURES::WALL_PROJECTION, std::move(tex)));
     }
+}
+
 }

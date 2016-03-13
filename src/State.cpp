@@ -10,13 +10,6 @@ State::State(Quoridor &app) :
 {
 }
 
-void State::notifyObservers()
-{
-    for (auto& observer : m_observers) {
-        observer->onNotify();
-    }
-}
-
 int State::promptInteger()
 {
     std::string line;

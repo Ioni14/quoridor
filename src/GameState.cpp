@@ -10,8 +10,7 @@ GameState::GameState(Quoridor& app, std::list<Player> players, const int& boardS
     State(app),
     m_board(boardSize),
     m_players(std::move(players)),
-    m_nbPlayers(m_players.size()),
-    m_nbWallsAtStart((boardSize + 1) / (m_nbPlayers / 2)),
+    m_nbWallsAtStart((boardSize + 1) / (getNbPlayers() / 2)),
     m_playerActual(1)
 {
 }
@@ -83,15 +82,7 @@ void GameState::initPlayers()
 
 void GameState::nextPlayer()
 {
-    m_playerActual = m_playerActual % m_nbPlayers + 1;
-}
-
-void GameState::finishGame()
-{
-    // La partie est finie : on revient sur le menu principal
-    auto newState = std::make_unique<MainMenuState>(m_app);
-    m_app.setState(std::move(newState));
-    m_app.applyNewState();
+    m_playerActual = m_playerActual % getNbPlayers() + 1;
 }
 
 bool GameState::hasWon(const Player& player) const
@@ -126,6 +117,17 @@ bool GameState::putWall(Player &player, const int &i, const int &j, const Board:
         return true;
     }
     return false;
+}
+
+Player& GameState::getPlayerActual()
+{
+    auto itPlayer = std::find_if(m_players.begin(), m_players.end(),
+        [this](const Player& player) -> bool {
+            return m_playerActual == player.getNumero();
+        }
+    );
+    assert(itPlayer != m_players.end());
+    return *itPlayer;
 }
 
 }

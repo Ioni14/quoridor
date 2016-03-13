@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     auto model = G36631::Quoridor();
-    MainWindow *widget = new MainWindow(model);
+    G36631::MainWindow *widget = new G36631::MainWindow(model);
     widget->show();
     int ret = app.exec();
     delete widget;

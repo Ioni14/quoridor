@@ -5,8 +5,8 @@
  * \file Quoridor.h
  * \brief Définition de la classe Quoridor
  * \author J. Keenens
- * \version 0.1
- * \date 07/03/2016
+ * \version 0.2
+ * \date 13/03/2016
  */
 
 #include "State.h"
