@@ -22,6 +22,7 @@ BoardView::BoardView(MainWindow& mainWindow, QWidget *parent) :
     setBackgroundBrush(Qt::black);
     m_scene.setSceneRect(0, 0, width(), height());
     setScene(&m_scene);
+    setFocus(Qt::OtherFocusReason);
 
     loadTextures();
 }
