@@ -9,6 +9,7 @@ namespace G36631 {
 
 MainWindow::MainWindow(G36631::Quoridor &model, QWidget *parent) :
     QMainWindow(parent),
+    m_gameLaunched(false),
     m_boardView(nullptr),
     m_model(model)
 {
@@ -63,9 +64,10 @@ void MainWindow::about()
 
 void MainWindow::newGame()
 {
-    if (!m_ui.mainMenuWidget->isHidden()) {
+    if (!m_gameLaunched) {
         return;
     }
+    m_gameLaunched = false;
     m_model.reset();
 
     if (m_boardView != nullptr) {
@@ -79,6 +81,10 @@ void MainWindow::newGame()
 
 void MainWindow::launchGame()
 {
+    if (m_gameLaunched) {
+        return;
+    }
+
     // On récupère les valeurs entrées
 
     int nbPlayers(0);
@@ -136,6 +142,8 @@ void MainWindow::launchGame()
         msgBox.exec();
         return;
     }
+
+    m_gameLaunched = true;
 
     state.setBoardSize(boardSize);
 
