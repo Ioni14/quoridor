@@ -83,6 +83,7 @@ private:
     void updateDashboard();
 
 private:
+    bool m_gameLaunched; /**< Flag qui indique si le jeu a été lancé ou si on est sur la config */
     Ui::Quoridor m_ui; /**< Les différents éléments composant la fenêtre */
     BoardView* m_boardView; /**< L'affichage graphique du plateau */
 
