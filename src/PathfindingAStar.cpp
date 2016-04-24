@@ -1,11 +1,14 @@
 #include "PathfindingAStar.h"
 
 #include <algorithm>
+#include <iostream>
 #include "Board.h"
 #include "BoardCell.h"
 #include "PathfindingAStarCell.h"
 
 namespace G36631 {
+
+int PathfindingAStar::count = 0;
 
 const int PathfindingAStar::COST_MOVEMENT = 1;
 
@@ -20,7 +23,7 @@ PathfindingAStar::createStartCell(const int& iSource, const int& jSource, const 
     int heuristic = static_cast<int>(std::abs(iDest - iSource) + std::abs(jDest - jSource));
     return std::make_unique<PathfindingAStarCell>(
         heuristic,
-        m_board.getCells()[iSource][jSource]
+        &(m_board.getCells()[iSource][jSource])
     );
 }
 
@@ -38,8 +41,11 @@ PathfindingAStar::listCellPtr::iterator PathfindingAStar::findLowestCell()
     return itMinCell;
 }
 
-bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest)
+bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest, std::list<const BoardCell*>& shortestPath)
 {
+    count++;
+
+    shortestPath.clear();
     m_openList.clear();
     m_closeList.clear();
 
@@ -59,12 +65,21 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
         // On vérifie si la destination se trouve dans la closeList
         auto itCloseListDest = findCellInCloseList(iDest, jDest);
         if (itCloseListDest != m_closeList.rend()) {
+
+            const PathfindingAStarCell::AStarCellPtr* cellParent = &(*itCloseListDest);
+            shortestPath.push_back((*cellParent)->getBoardCell());
+            while ((*cellParent)->getBoardCell()->getIPos() != iSource
+                   || (*cellParent)->getBoardCell()->getJPos() != jSource) {
+                cellParent = (*cellParent)->getParent();
+                shortestPath.push_back((*cellParent)->getBoardCell());
+            }
+
             return true;
         }
 
         // On récupère la cellule actuelle (la dernière ajoutée à closeList)
         auto& minCell = m_closeList.back();
-        auto& cellActual = minCell->getBoardCell();
+        const BoardCell* cellActual = minCell->getBoardCell();
 
         auto walkableCells = findWalkableCells(cellActual);
 
@@ -86,7 +101,7 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
                     costMovementActual,
                     heuristicActual,
                     &minCell,
-                    *(*itBoardCell)
+                    *itBoardCell
                 );
                 m_openList.push_back(std::move(aStarCell));
             } else {
@@ -102,27 +117,31 @@ bool PathfindingAStar::hasPath(const int& iSource, const int& jSource, const int
     return false;
 }
 
-std::vector<const BoardCell*> PathfindingAStar::findWalkableCells(const BoardCell& cellActual)
+std::vector<const BoardCell*> PathfindingAStar::findWalkableCells(const BoardCell* cellActual)
 {
     auto& cells = m_board.getCells();
 
+    int moves[12][2] = {
+        {-1, -1},
+        { 0, -1},
+        { 1, -1},
+        {-1,  0},
+        { 1,  0},
+        {-1,  1},
+        { 0,  1},
+        { 1,  1},
+        { 0, -2},
+        { 0,  2},
+        {-2,  0},
+        { 2,  0},
+    };
+
     // On groupe les cellules atteignables
     std::vector<const BoardCell*> walkableCells(0);
-    if (cellActual.getIPos() + 1 < m_board.getSize() && !cellActual.hasWallEast()) {
-        // On peut aller à droite
-        walkableCells.push_back(&(cells[cellActual.getIPos() + 1][cellActual.getJPos()]));
-    }
-    if (cellActual.getJPos() + 1 < m_board.getSize() && !cellActual.hasWallSouth()) {
-        // On peut aller en bas
-        walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() + 1]));
-    }
-    if (cellActual.getIPos() - 1 >= 0 && !cellActual.hasWallWest()) {
-        // On peut aller à gauche
-        walkableCells.push_back(&(cells[cellActual.getIPos() - 1][cellActual.getJPos()]));
-    }
-    if (cellActual.getJPos() - 1 >= 0 && !cellActual.hasWallNorth()) {
-        // On peut aller en haut
-        walkableCells.push_back(&(cells[cellActual.getIPos()][cellActual.getJPos() - 1]));
+    for (int i = 0; i < 12; ++i) {
+        if (Player::canMove(m_board, cellActual->getIPos(), cellActual->getJPos(), moves[i][0], moves[i][1])) {
+            walkableCells.push_back(&(cells[cellActual->getIPos() + moves[i][0]][cellActual->getJPos() + moves[i][1]]));
+        }
     }
 
     return walkableCells;
@@ -134,8 +153,8 @@ PathfindingAStar::findCellInCloseList(const int& i, const int& j)
     return std::find_if(m_closeList.rbegin(), m_closeList.rend(),
         // Lambda fonction pour trouver si la cellule est dans la closeList
         [i, j](const PathfindingAStarCell::AStarCellPtr& cell) -> bool {
-            return i == cell->getBoardCell().getIPos() &&
-                   j == cell->getBoardCell().getJPos();
+            return i == cell->getBoardCell()->getIPos() &&
+                   j == cell->getBoardCell()->getJPos();
         }
     );
 }
@@ -146,8 +165,8 @@ PathfindingAStar::findCellInOpenList(const int& i, const int& j)
     return std::find_if(m_openList.begin(), m_openList.end(),
         // Lambda fonction pour trouver si la cellule est dans la openList
         [i, j](const PathfindingAStarCell::AStarCellPtr& cell) -> bool {
-            return i == cell->getBoardCell().getIPos() &&
-                   j == cell->getBoardCell().getJPos();
+            return i == cell->getBoardCell()->getIPos() &&
+                   j == cell->getBoardCell()->getJPos();
         }
     );
 }

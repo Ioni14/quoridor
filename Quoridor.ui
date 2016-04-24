@@ -531,7 +531,7 @@
                 <item>
                  <widget class="QRadioButton" name="player1IARadioButton">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="text">
                    <string>IA</string>
@@ -560,7 +560,7 @@
                 <item>
                  <widget class="QRadioButton" name="player2IARadioButton">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="text">
                    <string>IA</string>
@@ -577,7 +577,7 @@
              <item>
               <widget class="QGroupBox" name="player3GroupBox">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="title">
                 <string>Joueur 3</string>
@@ -596,7 +596,7 @@
                 <item>
                  <widget class="QRadioButton" name="player3IARadioButton">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="text">
                    <string>IA</string>
@@ -609,7 +609,7 @@
              <item>
               <widget class="QGroupBox" name="player4GroupBox">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="title">
                 <string>Joueur 4</string>
@@ -628,7 +628,7 @@
                 <item>
                  <widget class="QRadioButton" name="player4IARadioButton">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="text">
                    <string>IA</string>

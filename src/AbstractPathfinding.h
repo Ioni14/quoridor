@@ -9,12 +9,15 @@
  * \date 07/03/2016
  */
 
+#include <list>
+
 /**
  * \namespace Espace de nom pour les projets de J. Keenens
  */
 namespace G36631 {
 
 class Board;
+class BoardCell;
 
 /**
  * \class AbstractPathfinding
@@ -44,7 +47,8 @@ public:
     virtual bool hasPath(const int& iSource,
                          const int& jSource,
                          const int& iDest,
-                         const int& jDest) = 0;
+                         const int& jDest,
+                         std::list<const BoardCell*>& shortestPath) = 0;
 
 protected:
     const Board& m_board; /**< Le plateau de jeu */

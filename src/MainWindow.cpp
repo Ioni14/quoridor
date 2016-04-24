@@ -104,32 +104,24 @@ void MainWindow::launchGame()
     auto& state = dynamic_cast<G36631::MainMenuState&>(stateBase);
 
     if (m_ui.player1RealRadioButton->isChecked()) {
-        // créer la méthode :
         state.addPlayer(1);
     } else {
-        // créer la méthode :
         state.addPlayer(1, true);
     }
     if (m_ui.player2RealRadioButton->isChecked()) {
-        // créer la méthode :
         state.addPlayer(2);
     } else {
-        // créer la méthode :
         state.addPlayer(2, true);
     }
     if (nbPlayers == 4) {
         if (m_ui.player3RealRadioButton->isChecked()) {
-            // créer la méthode :
             state.addPlayer(3);
         } else {
-            // créer la méthode :
             state.addPlayer(3, true);
         }
         if (m_ui.player4RealRadioButton->isChecked()) {
-            // créer la méthode :
             state.addPlayer(4);
         } else {
-            // créer la méthode :
             state.addPlayer(4, true);
         }
     }
@@ -159,6 +151,13 @@ void MainWindow::launchGame()
     }
     m_ui.mainMenuWidget->hide();
     m_ui.gameWidget->show();
+
+    qApp->processEvents();
+
+    auto& gameState = dynamic_cast<G36631::GameState&>(*(m_model.getState()));
+    if (gameState.getPlayerActual().isIA()) {
+        gameState.executeIA();
+    }
 }
 
 void MainWindow::onPlayersInitialized(const std::list<G36631::Player>& players)
@@ -252,6 +251,8 @@ void MainWindow::updateDashboard()
                 break;
         }
     }
+
+    qApp->processEvents();
 }
 
 }

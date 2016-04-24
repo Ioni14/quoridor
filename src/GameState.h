@@ -5,7 +5,7 @@
  * \file GameState.h
  * \brief Définition de la classe GameState
  * \author J. Keenens
- * \version 0.2
+ * \version 0.3
  * \date 13/03/2016
  */
 
@@ -105,9 +105,8 @@ public:
      * \param i : la colonne cible
      * \param j : la ligne cible
      * \param orientation : vertical ou horizontal
-     * \return true si le mur a été posé
      */
-    bool putWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation);
+    void putWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation);
     /**
      * \brief Vérifie si un mur peut être posé à cet endroit et par ce joueur
      * \param player : le joueur concerné
@@ -122,6 +121,8 @@ public:
      * \brief Passe au joueur suivant
      */
     void nextPlayer();
+
+    void executeIA();
 
 private:
     /**

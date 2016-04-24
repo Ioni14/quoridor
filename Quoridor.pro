@@ -18,7 +18,9 @@ HEADERS += \
     src/Quoridor.h \
     src/State.h \
     src/MainWindow.h \
-    src/BoardView.h
+    src/BoardView.h \
+    src/IAStrategy.h \
+    src/IAStrategyNegaMax.h
 
 SOURCES += \
     src/AbstractPathfinding.cpp \
@@ -34,7 +36,8 @@ SOURCES += \
     src/Quoridor.cpp \
     src/State.cpp \
     src/MainWindow.cpp \
-    src/BoardView.cpp
+    src/BoardView.cpp \
+    src/IAStrategyNegaMax.cpp
 
 FORMS += \
     Quoridor.ui

@@ -9,7 +9,6 @@
  * \date 07/03/2016
  */
 
-#include <list>
 #include <memory>
 #include <vector>
 #include "AbstractPathfinding.h"
@@ -36,7 +35,7 @@ public:
      */
     PathfindingAStar(const Board& board);
 
-    bool hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest);
+    bool hasPath(const int& iSource, const int& jSource, const int& iDest, const int& jDest, std::list<const BoardCell*> &shortestPath);
 
 private:
     /**
@@ -44,7 +43,7 @@ private:
      * \param cellActual : la cellule de référence du déplacement
      * \return un tableau des cellules atteignables
      */
-    std::vector<const BoardCell*> findWalkableCells(const BoardCell& cellActual);
+    std::vector<const BoardCell*> findWalkableCells(const BoardCell *cellActual);
     /**
      * \brief Crée la cellule A* de départ à partir de ses coordonnées
      * \param iSource : la colonne de la cellule de départ
@@ -76,6 +75,8 @@ private:
      */
     listCellPtr::reverse_iterator findCellInCloseList(const int& i, const int& j);
 
+public:
+    static int count;
 private:
     listCellPtr m_openList; /**< La "open list" de A* */
     listCellPtr m_closeList; /**< La "close list" de A* */

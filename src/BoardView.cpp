@@ -1,6 +1,8 @@
 #include "BoardView.h"
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <QGraphicsPixmapItem>
 #include "MainWindow.h"
 #include "GameState.h"
@@ -68,7 +70,6 @@ void BoardView::doMouseEvent(const QPoint& mousePos, const bool& projection)
         if (projection) {
             createPlayerProjectionItem(player, x, y);
         } else {
-            state.nextPlayer();
             state.movePlayer(player, di, dj);
         }
     }
@@ -112,7 +113,6 @@ void BoardView::doMouseEvent(const QPoint& mousePos, const bool& projection)
         if (projection) {
             createWallProjectionItem(xFixed, yFixed, m_wallOrientation);
         } else {
-            state.nextPlayer();
             state.putWall(player, xFixed, yFixed, m_wallOrientation);
         }
     }
@@ -184,6 +184,9 @@ void BoardView::movePlayer(const G36631::Player& player)
         player.getIPos() * cellWidth + OFFSET_HORIZONTAL,
         player.getJPos() * cellHeight + OFFSET_VERTICAL
     );
+
+    qApp->processEvents();
+    //std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 // Crée et affiche une sprite mur en bas à droite de la case visée
@@ -212,6 +215,9 @@ void BoardView::putWall(const int& i, const int& j, const G36631::Board::WALL_OR
         );
     }
     m_wallsItems.push_back(wallSprite);
+
+    qApp->processEvents();
+    //std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 void BoardView::drawBoard(const int& size)

@@ -1,5 +1,6 @@
 #include "Board.h"
 
+#include <iostream>
 #include "PathfindingAStar.h"
 
 namespace G36631 {
@@ -49,12 +50,8 @@ void Board::putBorderWalls(const int& i, const int& j)
     }
 }
 
-bool Board::putWall(const std::list<Player>& players, Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+bool Board::putWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
-    if (!canPutWall(players, player, i, j, orientation)) {
-        return false;
-    }
-
     if (orientation == WALL_ORIENTATION::VERTICAL) {
         m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::UP_LEFT);
         m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::DOWN_RIGHT);
@@ -71,8 +68,66 @@ bool Board::putWall(const std::list<Player>& players, Player& player, const int&
     return true;
 }
 
+void Board::destroyWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+{
+    if (orientation == WALL_ORIENTATION::VERTICAL) {
+        m_cells[i][j].setWallEast(BoardCell::WALL_POSITION::NONE);
+        m_cells[i][j + 1].setWallEast(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j].setWallWest(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j + 1].setWallWest(BoardCell::WALL_POSITION::NONE);
+    } else {
+        m_cells[i][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j].setWallSouth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+        m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::NONE);
+    }
+
+    player.incrementWalls();
+}
+
+bool Board::syncShortestPathByPlayer(Player& playerForPath)
+{
+    bool pathsFound = true;
+    bool needRecalculate = false;
+    std::list<const BoardCell*> path = playerForPath.getLastShortestPath();
+    if (path.size() == 0) {
+        needRecalculate = true;
+    } else {
+        const BoardCell* firstBc = *(path.rbegin());
+        if (firstBc->getIPos() != playerForPath.getIPos()
+            || firstBc->getJPos() != playerForPath.getJPos()) {
+            needRecalculate = true;
+        } else {
+            for (auto it = path.rbegin(); it != std::prev(path.rend(), 1); it++) {
+                const BoardCell* bc = *it;
+                const BoardCell* bc2 = *(std::next(it, 1));
+                if (!Player::canMove(*this, bc->getIPos(), bc->getJPos(), bc2->getIPos() - bc->getIPos(), bc2->getJPos() - bc->getJPos())) {
+                    needRecalculate = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (needRecalculate) { // on recalcule le chemin le plus court
+        //std::cout << "recalculate" << std::endl;
+        playerForPath.setLastShortestPath(calculateShortestPath(playerForPath));
+        pathsFound &= playerForPath.getLastShortestPath().size() != 0;
+    }
+    return pathsFound;
+}
+
+bool Board::syncShortestPath(std::list<Player>& players)
+{
+    // On regarde si le shortestPath est toujours ouvert
+    bool pathsFound = true;
+    for (auto& playerForPath : players) {
+        pathsFound &= syncShortestPathByPlayer(playerForPath);
+    }
+    return pathsFound;
+}
+
 // Le mur se met en bas à droite de la cellule visée
-bool Board::canPutWall(const std::list<Player>& players, const Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
+bool Board::canPutWall(std::list<Player>& players, const Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation)
 {
     if (!player.hasWalls()) {
         return false;
@@ -113,7 +168,9 @@ bool Board::canPutWall(const std::list<Player>& players, const Player& player, c
         m_cells[i + 1][j + 1].setWallNorth(BoardCell::WALL_POSITION::DOWN_RIGHT);
     }
 
-    bool pathsFound = havePaths(players);
+    // On regarde si le shortestPath est toujours ouvert
+    bool pathsFound = syncShortestPath(players);
+    //bool pathsFound = havePaths(players);
 
     // On remet les chemins comme avant
     if (orientation == WALL_ORIENTATION::VERTICAL) {
@@ -131,7 +188,83 @@ bool Board::canPutWall(const std::list<Player>& players, const Player& player, c
     return pathsFound;
 }
 
-bool Board::havePaths(const std::list<Player>& players) const
+std::list<const BoardCell*> Board::calculateShortestPath(const Player& player)
+{
+    std::list<const BoardCell*> shortestPath;
+
+    switch (player.getNumero()) {
+        case 1:
+        default:
+            for (int i = 0; i < m_size; ++i) {
+                std::list<const BoardCell*> shortestPathTmp;
+
+                // On enlève le joueur
+                const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                int hasPath = m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, 0, shortestPathTmp);
+                // On remet le joueur
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
+                if (hasPath && (shortestPathTmp.size() < shortestPath.size() || shortestPath.size() == 0)) {
+                    shortestPath = shortestPathTmp;
+                }
+            }
+            break;
+        case 2:
+            for (int i = 0; i < m_size; ++i) {
+                std::list<const BoardCell*> shortestPathTmp;
+
+                // On enlève le joueur
+                const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                int hasPath = m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, m_size - 1, shortestPathTmp);
+                // On remet le joueur
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
+                if (hasPath && (shortestPathTmp.size() < shortestPath.size() || shortestPath.size() == 0)) {
+                    shortestPath = shortestPathTmp;
+                }
+            }
+            break;
+        case 3:
+            for (int j = 0; j < m_size; ++j) {
+                std::list<const BoardCell*> shortestPathTmp;
+
+                // On enlève le joueur
+                const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                int hasPath = m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 0, j, shortestPathTmp);
+                // On remet le joueur
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
+                if (hasPath && (shortestPathTmp.size() < shortestPath.size() || shortestPath.size() == 0)) {
+                    shortestPath = shortestPathTmp;
+                }
+            }
+            break;
+        case 4:
+            for (int j = 0; j < m_size; ++j) {
+                std::list<const BoardCell*> shortestPathTmp;
+
+                // On enlève le joueur
+                const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                int hasPath = m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), m_size - 1, j, shortestPathTmp);
+                // On remet le joueur
+                m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
+                if (hasPath && (shortestPathTmp.size() < shortestPath.size() || shortestPath.size() == 0)) {
+                    shortestPath = shortestPathTmp;
+                }
+            }
+            break;
+    }
+
+    return shortestPath;
+}
+
+/*
+bool Board::havePaths(const std::list<Player>& players)
 {
     // Test pathfinding
     for (auto& player : players) {
@@ -140,7 +273,15 @@ bool Board::havePaths(const std::list<Player>& players) const
             case 1:
             default:
                 for (int i = 0; i < m_size; ++i) {
-                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, 0);
+                    std::list<const BoardCell*> shortestPath;
+
+                    // On enlève le joueur
+                    const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, 0, shortestPath);
+                    // On remet le joueur
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
                     if (hasPath) {
                         break;
                     }
@@ -148,7 +289,15 @@ bool Board::havePaths(const std::list<Player>& players) const
                 break;
             case 2:
                 for (int i = 0; i < m_size; ++i) {
-                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, m_size - 1);
+                    std::list<const BoardCell*> shortestPath;
+
+                    // On enlève le joueur
+                    const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), i, m_size - 1, shortestPath);
+                    // On remet le joueur
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
                     if (hasPath) {
                         break;
                     }
@@ -156,7 +305,15 @@ bool Board::havePaths(const std::list<Player>& players) const
                 break;
             case 3:
                 for (int j = 0; j < m_size; ++j) {
-                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 0, j);
+                    std::list<const BoardCell*> shortestPath;
+
+                    // On enlève le joueur
+                    const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), 0, j, shortestPath);
+                    // On remet le joueur
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
                     if (hasPath) {
                         break;
                     }
@@ -164,7 +321,15 @@ bool Board::havePaths(const std::list<Player>& players) const
                 break;
             case 4:
                 for (int j = 0; j < m_size; ++j) {
-                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), m_size - 1, j);
+                    std::list<const BoardCell*> shortestPath;
+
+                    // On enlève le joueur
+                    const Player* playerInCell = m_cells[player.getIPos()][player.getJPos()].getPlayer();
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(nullptr);
+                    hasPath |= m_pathfindingStrategy->hasPath(player.getIPos(), player.getJPos(), m_size - 1, j, shortestPath);
+                    // On remet le joueur
+                    m_cells[player.getIPos()][player.getJPos()].setPlayer(playerInCell);
+
                     if (hasPath) {
                         break;
                     }
@@ -178,5 +343,6 @@ bool Board::havePaths(const std::list<Player>& players) const
 
     return true;
 }
+*/
 
 }

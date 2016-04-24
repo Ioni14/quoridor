@@ -9,12 +9,14 @@
  * \date 07/03/2016
  */
 
+#include "IAStrategy.h"
+
 /**
  * \namespace Espace de nom pour les projets de J. Keenens
  */
 namespace G36631 {
 
-class Board;
+class BoardCell;
 
 /**
  * \class Player
@@ -31,8 +33,9 @@ public:
      * \brief Constructeur logique
      * \param numero : l'identification du joueur
      * \param ia : true si le joueur est une IA (par défaut : false)
+     * \param iaStrategy : la stratégie qu'utilise l'IA pour déterminer ses actions
      */
-    Player(const int& numero, const bool &ia = false);
+    explicit Player(const int& numero, const bool &ia = false, IAStrategy::IAStrategyPtr iaStrategy = nullptr);
 
     /**
      * \brief Bouge le joueur sur le plateau
@@ -49,6 +52,10 @@ public:
      * \return true si le joueur peut aller sur la cellule
      */
     bool canMove(const Board& board, const int& di, const int& dj) const;
+
+    static bool canMove(const Board& board, const int& iSource, const int& jSource, const int& di, const int& dj);
+
+    IAResponse executeIA(Board &board, std::list<Player> &players);
 
     /**
      * \brief Récupère l'identification du joueur
@@ -130,6 +137,22 @@ public:
         }
     }
 
+    /**
+     * \brief Ajoute un mur au joueur
+     */
+    void incrementWalls() {
+        m_nbWalls++;
+    }
+
+    void setLastShortestPath(std::list<const BoardCell*> path) {
+        m_lastShortestPath.clear();
+        m_lastShortestPath = path;
+    }
+
+    const std::list<const BoardCell*>& getLastShortestPath() const {
+        return m_lastShortestPath;
+    }
+
 private:
     int m_iPos; /**< La colonne où se trouve le joueur */
     int m_jPos; /**< La ligne où se trouve le joueur */
@@ -138,6 +161,9 @@ private:
     int m_nbWalls; /**< Le nombre de murs que le joueur possède */
 
     bool m_IA; /**< Flag pour le type de joueur (IA ou non) */
+    IAStrategy::IAStrategyPtr m_iaStrategy; /**< La stratégie à appliquer pour l'IA */
+
+    std::list<const BoardCell*> m_lastShortestPath; /**< Le dernier chemin le plus court du joueur à son arrivée */
 };
 
 }

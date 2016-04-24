@@ -32,7 +32,7 @@ public:
      * \param heuristic : le coût heuristique
      * \param boardCell : le plateau du jeu
      */
-    PathfindingAStarCell(const int& heuristic, const BoardCell& boardCell);
+    PathfindingAStarCell(const int& heuristic, const BoardCell *boardCell);
     /**
      * \brief Constructeur logique
      * \param costMovement : le coût de déplacement
@@ -40,7 +40,7 @@ public:
      * \param parent : le parent
      * \param boardCell : le plateau du jeu
      */
-    PathfindingAStarCell(const int& costMovement, const int& heuristic, const AStarCellPtr* parent, const BoardCell& boardCell);
+    PathfindingAStarCell(const int& costMovement, const int& heuristic, const AStarCellPtr* parent, const BoardCell* boardCell);
 
     /**
      * \brief Calcule le score de la cellule
@@ -80,11 +80,15 @@ public:
         m_parent = parent;
     }
 
+    const AStarCellPtr* getParent() const {
+        return m_parent;
+    }
+
     /**
      * \brief Récupère la cellule du plateau
      * \return la cellule du plateau
      */
-    const BoardCell& getBoardCell() const {
+    const BoardCell* getBoardCell() const {
         return m_boardCell;
     }
 
@@ -93,7 +97,7 @@ private:
     int m_heuristic; /**< Coût heuristique entre la cellule et l'arrivée */
 
     const AStarCellPtr* m_parent; /**< La cellule qui permet d'atteindre celle-ci dans le plus court chemin */
-    const BoardCell& m_boardCell; /**< La cellule du plateau que surcouche celle-ci */
+    const BoardCell* m_boardCell; /**< La cellule du plateau que surcouche celle-ci */
 };
 
 }

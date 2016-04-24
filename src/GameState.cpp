@@ -1,6 +1,9 @@
 #include "GameState.h"
 
 #include <iostream>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 #include "Quoridor.h"
 #include "MainMenuState.h"
 
@@ -78,11 +81,40 @@ void GameState::initPlayers()
     }
 
     firePlayersInitialized(m_players);
+
+}
+
+void GameState::executeIA()
+{
+    // Appel l'IA si joueur = IA
+    auto& playerActual = getPlayerActual();
+    if (playerActual.isIA()) {
+        IAResponse bestAction = playerActual.executeIA(m_board, m_players);
+        if (bestAction.type == IAResponse::Type::MOVE) {
+            firePlayerMove(playerActual);
+        } else {
+            firePutWall(
+                bestAction.bestI,
+                bestAction.bestJ,
+                (bestAction.orientation == IAResponse::WallOrientation::HORIZONTAL)
+                    ? Board::WALL_ORIENTATION::HORIZONTAL
+                    : Board::WALL_ORIENTATION::VERTICAL
+            );
+        }
+        // moved or put wall for fire event ?
+        if (hasWon(playerActual)) {
+            firePlayerWon(playerActual);
+            return;
+        }
+        nextPlayer();
+    }
 }
 
 void GameState::nextPlayer()
 {
     m_playerActual = m_playerActual % getNbPlayers() + 1;
+
+    executeIA();
 }
 
 bool GameState::hasWon(const Player& player) const
@@ -102,21 +134,31 @@ void GameState::movePlayer(Player& player, const int& di, const int& dj)
 
     if (hasWon(player)) {
         firePlayerWon(player);
+        return;
     }
+
+    nextPlayer();
 }
 
 bool GameState::canPutWall(Player& player, const int &i, const int &j, const Board::WALL_ORIENTATION &orientation)
 {
-    return m_board.canPutWall(m_players, player, i, j, orientation);
+    //std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+
+    bool res = m_board.canPutWall(m_players, player, i, j, orientation);
+/*
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+    std::cout << "Duration : " << time_span.count() << " seconds. " << std::endl;
+*/
+    return res;
 }
 
-bool GameState::putWall(Player &player, const int &i, const int &j, const Board::WALL_ORIENTATION &orientation)
+void GameState::putWall(Player &player, const int &i, const int &j, const Board::WALL_ORIENTATION &orientation)
 {
-    if (m_board.putWall(m_players, player, i, j, orientation)) {
+    if (m_board.putWall(player, i, j, orientation)) {
+        nextPlayer();
         firePutWall(i, j, orientation);
-        return true;
     }
-    return false;
 }
 
 Player& GameState::getPlayerActual()

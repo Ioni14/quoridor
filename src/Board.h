@@ -60,7 +60,9 @@ public:
      * \param orientation : l'orientation du mur (vertical, horizontal)
      * \return true si le mur a été construit
      */
-    bool putWall(const std::list<Player> &players, Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    bool putWall(Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    void destroyWall(Player& player, const int& i, const int& j, const Board::WALL_ORIENTATION& orientation);
+
     /**
      * \brief Indique si le joueur indiqué peut mettre un mur à l'emplacement indiqué
      * \param players : la liste des joueurs
@@ -70,13 +72,19 @@ public:
      * \param orientation : l'orientation du mur (vertical, horizontal)
      * \return true si le mur peut être construit
      */
-    bool canPutWall(const std::list<Player>& players, const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+    bool canPutWall(std::list<Player>& players, const Player& player, const int& i, const int& j, const WALL_ORIENTATION& orientation);
+
     /**
      * \brief Indique si tous les joueurs ont un chemin jusqu'à leur arrivée
      * \param players : la liste des joueurs
      * \return true si tous les joueurs ont un chemin
      */
-    bool havePaths(const std::list<Player> &players) const;
+    //bool havePaths(const std::list<Player>& players);
+
+    bool syncShortestPathByPlayer(Player& player);
+    bool syncShortestPath(std::list<Player>& players);
+
+    std::list<const BoardCell *> calculateShortestPath(const Player& player);
 
     /**
      * \brief Récupère la taille du plateau

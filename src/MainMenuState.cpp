@@ -4,6 +4,7 @@
 #include <memory>
 #include "Quoridor.h"
 #include "GameState.h"
+#include "IAStrategyNegaMax.h"
 
 namespace G36631 {
 
@@ -18,7 +19,12 @@ MainMenuState::MainMenuState(Quoridor& app) :
 
 void MainMenuState::addPlayer(const int& numero, const bool& ia)
 {
-    m_players.push_back(Player(numero, ia));
+    // TODO : hériter Player en PlayerIA ?
+    if (ia) {
+        m_players.push_back(Player(numero, true, std::make_unique<IAStrategyNegaMax>()));
+    } else {
+        m_players.push_back(Player(numero));
+    }
 }
 
 void MainMenuState::launchGame(Observer* observer)
